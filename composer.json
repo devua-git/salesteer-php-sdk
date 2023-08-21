@@ -1,0 +1,34 @@
+{
+    "name": "devua/salesteer-php-sdk",
+    "description": "Salesteer PHP Library",
+    "version": "1.0.0",
+    "keywords": [
+        "salesteer",
+        "crm",
+        "api"
+    ],
+    "homepage": "https://salesteer.com/",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Salesteer and contributors",
+            "homepage": "https://github.com/devua-git/salesteer-php-sdk/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=8.0.0",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "ext-mbstring": "*"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "Salesteer\\": "lib/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {}
+    },
+    "extra": {}
+}
