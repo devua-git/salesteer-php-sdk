@@ -3,7 +3,7 @@
 namespace Salesteer;
 
 use Salesteer\Util as Util;
-use Salesteer\Util\LoggerInterface;
+use Psr\Log\LoggerInterface;
 
 abstract class Salesteer
 {

@@ -4,6 +4,7 @@ namespace Salesteer\Util;
 
 use Exception as GlobalException;
 use Salesteer\Exception as Exception;
+use Psr\Log\LoggerInterface;
 
 class DefaultLogger implements LoggerInterface
 {
