@@ -10,9 +10,7 @@ use Salesteer\SalesteerClientInterface;
  */
 abstract class AbstractService
 {
-    protected SalesteerClientInterface $client;
-
-    public function __construct(SalesteerClientInterface $client)
+    public function __construct(protected SalesteerClientInterface $client)
     {
         $this->client = $client;
     }

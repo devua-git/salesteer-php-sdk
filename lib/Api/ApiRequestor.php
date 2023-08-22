@@ -8,13 +8,8 @@ use Salesteer\Salesteer;
 
 class ApiRequestor
 {
-    private string $_apiKey;
-    private string $_apiBase;
-
-    public function __construct()
+    public function __construct(private string $_apiKey, private string $_apiBase)
     {
-        $this->_apiKey = Salesteer::getApiKey();
-        $this->_apiBase = Salesteer::getApiBase();
     }
 
     /**

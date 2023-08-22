@@ -11,25 +11,28 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
 {
     const OBJECT_NAME = 'object';
 
-    protected array $_values;
+    private array $_values;
 
-    protected bool $_opts;
+    private bool $_opts;
 
-    protected array $_headers;
-
-    public function __construct(protected $id = null, ?array $headers = [])
+    public function __construct(
+        private SalesteerClientInterface $_client,
+        protected $id = null,
+        private ?array $_headers = [])
     {
         $this->_values = [];
-        $this->_values = $headers;
 
         if (null !== $id) {
             $this->_values['id'] = $id;
         }
     }
 
-    public static function constructFrom(array $values, ?array $headers = null)
+    public static function constructFrom(
+        SalesteerClient $client,
+        array $values,
+        ?array $headers = null)
     {
-        $obj = new static($values['id'] ?? null, $headers);
+        $obj = new static($client, $values['id'] ?? null, $headers);
         $obj->refreshFrom($values);
 
         return $obj;
@@ -53,7 +56,11 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     public function updateAttributes(array $values) : void
     {
         foreach ($values as $k => $v) {
-            $this->_values[$k] = Util\Util::convertToSalesteerObject($v);
+            $this->_values[$k] = Util\Util::convertToSalesteerObject(
+                $this->client,
+                $v,
+                $this->_headers
+            );
         }
     }
 
@@ -134,7 +141,11 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
             );
         }
 
-        $this->_values[$k] = Util\Util::convertToSalesteerObject($v, $this->_opts);
+        $this->_values[$k] = Util\Util::convertToSalesteerObject(
+            $this->_client,
+            $v,
+            $this->_headers
+        );
     }
 
     public function __isset($k)
@@ -202,5 +213,13 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     public function __debugInfo()
     {
         return $this->_values;
+    }
+
+    /**
+     * Client methods
+     */
+    protected function request($method, $path, $params, $headers)
+    {
+        return $this->_client->request($method, $path, $params, $headers);
     }
 }

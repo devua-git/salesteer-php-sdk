@@ -2,6 +2,7 @@
 
 namespace Salesteer\Util;
 
+use Salesteer\SalesteerClientInterface;
 use Salesteer\SalesteerObject;
 
 abstract class Util
@@ -29,12 +30,15 @@ abstract class Util
      *
      * @return array|SalesteerObject
      */
-    public static function convertToSalesteerObject($res, $headers = null)
+    public static function convertToSalesteerObject(
+        SalesteerClientInterface $client,
+        $res,
+        array $headers = null)
     {
         if (self::isList($res)) {
             $mapped = [];
             foreach ($res as $i) {
-                $mapped[] = self::convertToSalesteerObject($i, $headers);
+                $mapped[] = self::convertToSalesteerObject($client, $i, $headers);
             }
 
             return $mapped;
@@ -48,7 +52,7 @@ abstract class Util
                 $class = \Salesteer\SalesteerObject::class;
             }
 
-            return $class::constructFrom($res, $headers);
+            return $class::constructFrom($client, $res, $headers);
         }
 
         return $res;

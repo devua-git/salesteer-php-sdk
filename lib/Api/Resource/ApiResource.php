@@ -2,7 +2,6 @@
 
 namespace Salesteer\Api\Resource;
 
-use Salesteer\Api\ApiRequestor;
 use Salesteer\SalesteerObject;
 use Salesteer\Exception as Exception;
 use Salesteer\Salesteer;
@@ -16,10 +15,9 @@ abstract class ApiResource extends SalesteerObject
      */
     public function refresh()
     {
-        $requestor = new ApiRequestor();
         $url = $this->instanceUrl();
 
-        $response = $requestor->request(
+        $response = $this->request(
             'get',
             $url,
             null,
@@ -38,7 +36,7 @@ abstract class ApiResource extends SalesteerObject
         // Replace dots with slashes for namespaced resources, e.g. if the object's name is
         // "foo.bar", then its URL will be "/v1/foo/bars".
         $objectName = str_replace('.', '/', static::OBJECT_NAME);
-        $version = Salesteer::$apiVersion;
+        $version = Salesteer::getApiVersion();
 
         if($version){
             return "/$version/{$objectName}s";
@@ -77,6 +75,6 @@ abstract class ApiResource extends SalesteerObject
 
     public static function baseUrl()
     {
-        return Salesteer::$apiBase;
+        return Salesteer::getApiBase();
     }
 }

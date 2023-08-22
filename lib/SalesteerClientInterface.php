@@ -8,7 +8,7 @@ interface SalesteerClientInterface
     /**
      * Sends a request to Salesteer's API.
      *
-     * @param 'delete'|'get'|'post' $method the HTTP method
+     * @param 'delete'|'get'|'post'|'patch'|'put' $method the HTTP method
      * @param string $path the path of the request
      * @param array $params the parameters of the request
      * @param array $headers

@@ -11,7 +11,26 @@ use Salesteer\Service as Service;
  */
 class SalesteerClient implements SalesteerClientInterface
 {
-    private Service\CoreServiceFactory|null $coreServiceFactory = null;
+    private array $_configs = [];
+
+    private Service\CoreServiceFactory|null $_serviceFactory = null;
+
+    public function __construct(string|array $configs = [])
+    {
+        if(is_string($configs)){
+            $configs = ['api_key' => $configs];
+        }
+        $this->_configs = $configs;
+        $this->_configs['api_key'] = $this->_configs['api_key'] ?? Salesteer::getApiKey();
+
+        if(!$this->_configs['api_key']){
+            throw new Exception\InvalidArgumentException('Api key is required.');
+        }
+
+        if(!isset($this->_configs['tenant_domain'])){
+            $this->_configs['tenant_domain'] = Salesteer::getTenantDomain();
+        }
+    }
 
     public function __get(string $name)
     {
@@ -20,11 +39,11 @@ class SalesteerClient implements SalesteerClientInterface
 
     public function getService(string $name)
     {
-        if (null === $this->coreServiceFactory) {
-            $this->coreServiceFactory = new Service\CoreServiceFactory($this);
+        if (null === $this->_serviceFactory) {
+            $this->_serviceFactory = new Service\CoreServiceFactory($this);
         }
 
-        return $this->coreServiceFactory->getService($name);
+        return $this->_serviceFactory->getService($name);
     }
 
     /**
@@ -39,10 +58,14 @@ class SalesteerClient implements SalesteerClientInterface
      */
     public function request($method, $path, $params, $headers)
     {
-        $requestor = new Api\ApiRequestor();
+        $requestor = new Api\ApiRequestor(
+            $this->_configs['api_key'],
+            Salesteer::getApiBase($this->_configs['tenant_domain'])
+        );
+
         $response = $requestor->request($method, $path, $params, $headers);
 
-        $obj = Util\Util::convertToSalesteerObject($response->json, $headers);
+        $obj = Util\Util::convertToSalesteerObject($this, $response->json, $headers);
 
         return $obj;
     }
