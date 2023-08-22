@@ -1,0 +1,280 @@
+<?php
+
+namespace Salesteer\Api;
+
+use GuzzleHttp\Client;
+use Salesteer\Exception as Exception;
+use Salesteer\Salesteer;
+
+class ApiRequestor
+{
+    private string $_apiKey;
+
+    private string $_apiBase;
+
+    private static $OPTIONS_KEYS = ['api_key', 'api_base'];
+
+    /**
+     * ApiRequestor constructor.
+     *
+     * @param null|string $apiKey
+     * @param null|string $apiBase
+     */
+    public function __construct($apiKey = null, $apiBase = null)
+    {
+        if (!$apiKey) {
+            $apiKey = Salesteer::$apiKey;
+        }
+        $this->_apiKey = $apiKey;
+
+        if (!$apiBase) {
+            $apiBase = Salesteer::$apiBase;
+        }
+        $this->_apiBase = $apiBase;
+    }
+
+    /**
+     * @param 'delete'|'get'|'post' $method
+     * @param string     $url
+     * @param null|array $params
+     * @param null|array $headers
+     *
+     * @throws Exception\ApiErrorException
+     *
+     * @return ApiResponse
+     */
+    public function request($method, $url, $params = null, $headers = null)
+    {
+        $params = $params ?: [];
+        $headers = $headers ?: [];
+
+        list($rbody, $rcode, $rheaders) = $this->_requestRaw($method, $url, $params, $headers);
+
+        $json = $this->_interpretResponse($rbody, $rcode, $rheaders);
+        $resp = new ApiResponse($rbody, $rcode, $rheaders, $json);
+
+        return $resp;
+    }
+
+    /**
+     * @static
+     *
+     * @param string $apiKey
+     * @param null   $clientInfo
+     *
+     * @return array
+     */
+    private static function _defaultHeaders($apiKey)
+    {
+        $uaString = 'Salesteer/v1 PHP/' . Salesteer::VERSION. ' ';
+
+        $langVersion = PHP_VERSION;
+        $uname_disabled = self::_isDisabled(ini_get('disable_functions'), 'php_uname');
+        $uname = $uname_disabled ? '(disabled)' : php_uname();
+
+        $ua = [
+            'bindings_version' => Salesteer::VERSION,
+            'lang' => 'php',
+            'lang_version' => $langVersion,
+            'publisher' => 'salesteer',
+            'uname' => $uname,
+        ];
+
+        return [
+            'X-Salesteer-Version' => Salesteer::getApiVersion(),
+            'X-Salesteer-Client-User-Agent' => json_encode($ua),
+            'User-Agent' => $uaString,
+            'Authorization' => 'Bearer ' . $apiKey,
+        ];
+    }
+
+    private function _prepareRequest($method, $url, $params, $headers)
+    {
+        if (!$this->_apiKey) {
+            $msg = 'No API key provided.  (HINT: set your API key using '
+              . '"Salesteer::setApiKey(<API-KEY>)".  You can generate API keys from '
+              . 'the Salesteer web interface. Email support@salesteer.com if you have any questions.';
+
+            throw new Exception\AuthenticationException($msg);
+        }
+
+        if ($params && is_array($params)) {
+            $optionKeysInParams = array_filter(
+                self::$OPTIONS_KEYS,
+                function ($key) use ($params) {
+                    return array_key_exists($key, $params);
+                }
+            );
+
+            if (count($optionKeysInParams) > 0) {
+                $message = sprintf('Options found in $params: %s. Options should '
+                  . 'be passed in their own array after $params. (HINT: pass an '
+                  . 'empty array to $params if you do not have any.)', implode(', ', $optionKeysInParams));
+                trigger_error($message, E_USER_WARNING);
+            }
+        }
+
+        $absUrl = $this->_apiBase . $url;
+        $defaultHeaders = $this->_defaultHeaders($this->_apiKey);
+
+        if (Salesteer::$tenantId) {
+            $defaultHeaders['X-Salesteer-Tenant-Id'] = Salesteer::$tenantId;
+        }
+
+        $defaultHeaders['Content-Type'] = 'application/json';
+        $finalHeaders = array_merge($defaultHeaders, $headers);
+
+        //TODO: strictly related to Guzzle remove in future
+        if('get' === $method){
+            $params = ['query' => $params];
+        }else{
+            $params = ['body' => $params];
+        }
+
+        return [$absUrl, $finalHeaders, $params];
+    }
+
+    /**
+     * @param 'delete'|'get'|'post'|'patch'|'put' $method
+     * @param string $url
+     * @param array $params
+     * @param array $headers
+     *
+     * @throws Exception\AuthenticationException
+     * @throws Exception\ApiConnectionException
+     *
+     * @return array
+     */
+    private function _requestRaw($method, $url, $params, $headers)
+    {
+        list($absUrl, $headers, $params) = $this->_prepareRequest($method, $url, $params, $headers);
+
+        // TODO: improve with PSR HTTP, see HttpClient\Http
+        $client = new Client();
+        $res = $client->request((string) $method, $absUrl, array_merge(
+            $params,
+            [
+                'headers' => $headers,
+            ]
+        ));
+
+        return [
+            $res->getBody(),
+            $res->getStatusCode(),
+            $res->getHeaders()
+        ];
+    }
+
+    /**
+     * @param string $rbody
+     * @param int    $rcode
+     * @param array  $rheaders
+     *
+     * @throws Exception\UnexpectedValueException
+     * @throws Exception\ApiErrorException
+     *
+     * @return array
+     */
+    private function _interpretResponse($rbody, $rcode, $rheaders)
+    {
+        $resp = json_decode($rbody, true);
+        $jsonError = json_last_error();
+
+        if (null === $resp && JSON_ERROR_NONE !== $jsonError) {
+            $msg = "Invalid response body from API: {$rbody} "
+              . "(HTTP response code was {$rcode}, json_last_error() was {$jsonError})";
+
+            throw new Exception\UnexpectedValueException($msg, $rcode);
+        }
+
+        if ($rcode < 200 || $rcode >= 300) {
+            $this->handleErrorResponse($rbody, $rcode, $rheaders, $resp);
+        }
+
+        return $resp;
+    }
+
+    /**
+     * @param string $rbody a JSON string
+     * @param int $rcode
+     * @param array $rheaders
+     * @param array $resp
+     *
+     * @throws Exception\UnexpectedValueException
+     * @throws Exception\ApiErrorException
+     */
+    public function handleErrorResponse($rbody, $rcode, $rheaders, $resp)
+    {
+        if (!is_array($resp) || !isset($resp['error'])) {
+            $msg = "Invalid response object from API: {$rbody} "
+              . "(HTTP response code was {$rcode})";
+
+            throw new Exception\UnexpectedValueException($msg);
+        }
+
+        $errorData = $resp['error'];
+
+        $error = self::_specificAPIError($rbody, $rcode, $rheaders, $resp, $errorData);
+
+        throw $error;
+    }
+
+    /**
+     * @static
+     *
+     * @param string $rbody
+     * @param int    $rcode
+     * @param array  $rheaders
+     * @param array  $resp
+     * @param array  $errorData
+     *
+     * @return Exception\ApiErrorException
+     */
+    private static function _specificAPIError($rbody, $rcode, $rheaders, $resp, $errorData)
+    {
+        $msg = isset($errorData['message']) ? $errorData['message'] : null;
+        $param = isset($errorData['param']) ? $errorData['param'] : null;
+        $code = isset($errorData['code']) ? $errorData['code'] : null;
+        $type = isset($errorData['type']) ? $errorData['type'] : null;
+
+        switch ($rcode) {
+            case 400:
+                return Exception\BadRequestException::factory($msg, $rcode, $rbody, $resp, $rheaders, $code);
+
+            case 404:
+                return Exception\InvalidRequestException::factory($msg, $rcode, $rbody, $resp, $rheaders, $code, $param);
+
+            case 401:
+                return Exception\AuthenticationException::factory($msg, $rcode, $rbody, $resp, $rheaders, $code);
+
+            case 403:
+                return Exception\PermissionException::factory($msg, $rcode, $rbody, $resp, $rheaders, $code);
+
+            case 429:
+                return Exception\RateLimitException::factory($msg, $rcode, $rbody, $resp, $rheaders, $code, $param);
+
+            default:
+                return Exception\UnknownApiErrorException::factory($msg, $rcode, $rbody, $resp, $rheaders, $code);
+        }
+    }
+
+    /**
+     * @static
+     *
+     * @param string $disableFunctionsOutput - String value of the 'disable_function' setting, as output by ini_get('disable_functions')
+     * @param string $functionName - Name of the function we are interesting in seeing whether or not it is disabled
+     *
+     * @return bool
+     */
+    private static function _isDisabled($disableFunctionsOutput, $functionName)
+    {
+        $disabledFunctions = explode(',', $disableFunctionsOutput);
+        foreach ($disabledFunctions as $disabledFunction) {
+            if (trim($disabledFunction) === $functionName) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
