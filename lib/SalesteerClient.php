@@ -8,10 +8,9 @@ use Salesteer\Service\CoreServiceFactory;
 
 class SalesteerClient implements SalesteerClientInterface
 {
-    /** @var CoreServiceFactory */
-    private $coreServiceFactory;
+    private CoreServiceFactory|null $coreServiceFactory = null;
 
-    public function __get($name)
+    public function __get($name) : AbstractServiceFactory
     {
         return $this->getService($name);
     }
