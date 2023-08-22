@@ -8,6 +8,7 @@ use Salesteer\Service as Service;
  * Client used to send requests to Stripe's API.
  *
  * @property Service\CustomerService $customers
+ * @property Service\PlaceService $places
  */
 class SalesteerClient implements SalesteerClientInterface
 {

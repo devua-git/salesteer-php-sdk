@@ -2,11 +2,6 @@
 
 namespace Salesteer\Service;
 
-/**
- * Service factory class for API resources in the root namespace.
- *
- * @property CustomerService $customers
- */
 class CoreServiceFactory extends AbstractServiceFactory
 {
     /**
@@ -14,6 +9,7 @@ class CoreServiceFactory extends AbstractServiceFactory
      */
     private static $classMap = [
         'customers' => CustomerService::class,
+        'places' => PlaceService::class,
     ];
 
     protected function getServiceClass(string $name) : string

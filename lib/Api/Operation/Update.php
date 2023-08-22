@@ -14,7 +14,7 @@ trait Update
         $params = $this->serializeParameters();
 
         $url = $this->instanceUrl();
-        $res = $this->_request('post', $url, $params, $headers);
+        $res = $this->_request('patch', $url, $params, $headers);
         $this->refreshFrom($res, $headers);
 
         return $this;

@@ -7,6 +7,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @method static Service\CustomerService customers()
+ * @method static Service\PlaceService places()
  */
 abstract class Salesteer
 {
