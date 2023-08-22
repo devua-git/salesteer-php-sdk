@@ -25,8 +25,12 @@ abstract class AbstractService
         return $this->getClient()->request($method, $path, $params, $headers);
     }
 
-    protected function buildPath($basePath, ...$ids)
+    protected function buildPath($basePath, $ids, $classPath = '')
     {
+        if(!is_array($ids)){
+            $ids = [$ids];
+        }
+
         foreach ($ids as $id) {
             if (null === $id || '' === trim($id)) {
                 $msg = 'The resource ID cannot be null or whitespace.';
@@ -35,6 +39,8 @@ abstract class AbstractService
             }
         }
 
-        return sprintf($basePath, ...array_map('urlencode', $ids));
+        $builtPath = sprintf($basePath, ...array_map('urlencode', $ids));
+
+        return "$classPath/$builtPath";
     }
 }

@@ -8,10 +8,10 @@ use Salesteer\Salesteer;
 
 abstract class ApiResource extends SalesteerObject
 {
+    const IS_API_PLURAL = false;
+
     /**
      * @throws Exception\ApiErrorException
-     *
-     * @return ApiResource the refreshed resource
      */
     public function refresh()
     {
@@ -28,40 +28,23 @@ abstract class ApiResource extends SalesteerObject
         return $this;
     }
 
-    /**
-     * @return string the endpoint URL for the given class
-     */
-    public static function classUrl()
+    public static function classUrl(bool $isApiPlural = false) : string
     {
         // Replace dots with slashes for namespaced resources, e.g. if the object's name is
         // "foo.bar", then its URL will be "/v1/foo/bars".
         $objectName = str_replace('.', '/', static::OBJECT_NAME);
+        $plurality = ($isApiPlural || self::IS_API_PLURAL) === true ? 's' : '';
         $version = Salesteer::getApiVersion();
 
         if($version){
-            return "/$version/{$objectName}s";
+            return "/$version/{$objectName}{$plurality}";
         }
 
-        return "{$objectName}s";
+        return "/{$objectName}{$plurality}";
     }
 
-    /**
-     * @param null|string $id the ID of the resource
-     *
-     * @throws Exception\UnexpectedValueException if $id is null
-     *
-     * @return string the instance endpoint URL for the given class
-     */
-    public static function resourceUrl($id = null)
+    public static function resourceUrl(string|int $id)
     {
-        if (null === $id) {
-            $class = static::class;
-            $message = 'Could not determine which URL to request: '
-               . "{$class} instance has invalid ID: {$id}";
-
-            throw new Exception\UnexpectedValueException($message);
-        }
-
         $base = static::classUrl();
         $resourceId = urlencode($id);
 
@@ -70,11 +53,6 @@ abstract class ApiResource extends SalesteerObject
 
     public function instanceUrl()
     {
-        return static::resourceUrl($this['id']);
-    }
-
-    public static function baseUrl()
-    {
-        return Salesteer::getApiBase();
+        return static::resourceUrl($this->id);
     }
 }

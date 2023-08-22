@@ -10,19 +10,27 @@ use Salesteer\Exception as Exception;
 class CustomerService extends AbstractService
 {
     /**
-     * Retrieves the details of an account.
-     *
-     * @param null|string $id
-     * @param null|array $params
-     * @param null|array $headers
-     *
      * @throws Exception\ApiErrorException if the request fails
-     *
-     * @return Api\Resource\Customer
      */
-    public function retrieve($id, $params = null, $headers = [])
+    public function retrieve(int $id, array $params = null, array $headers = []) : Api\Resource\Customer
     {
-        $url = $this->buildPath('/customers/%s', $id);
+        $url = $this->buildPath('/%s', $id, Api\Resource\Customer::classUrl());
         return $this->request('get', $url, $params, $headers);
+    }
+
+    /**
+     * @throws Exception\ApiErrorException if the request fails
+     */
+    public function list(array $params = null, array $headers = []) : Api\Resource\Customer
+    {
+        return $this->request('get', Api\Resource\Customer::classUrl(true), $params, $headers);
+    }
+
+    /**
+     * @throws Exception\ApiErrorException if the request fails
+     */
+    public function create(array $params = null, array $headers = []) : Api\Resource\Customer
+    {
+        return $this->request('post', Api\Resource\Customer::classUrl(), $params, $headers);
     }
 }
