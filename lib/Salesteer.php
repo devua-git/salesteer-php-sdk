@@ -5,6 +5,9 @@ namespace Salesteer;
 use Salesteer\Util as Util;
 use Psr\Log\LoggerInterface;
 
+/**
+ * @method static Service\CustomerService customers()
+ */
 abstract class Salesteer
 {
     const VERSION = '1.0.0';
@@ -15,8 +18,6 @@ abstract class Salesteer
 
     private static string|null $_apiKey = null;
 
-    private static string|null $_tenantId = null;
-
     private static string|null $_tenantDomain = null;
 
     private static string|null $_apiVersion = Util\ApiVersion::CURRENT;
@@ -24,6 +25,25 @@ abstract class Salesteer
     private static LoggerInterface|null $_logger = null;
 
     private static bool $_enableTelemetry = true;
+
+    private static SalesteerClient|null $_client = null;
+
+    public static function __callStatic($method, $args = null)
+    {
+        if(null !== $args){
+            throw new Exception\InvalidArgumentException('You cannot pass arguments to static services.');
+        }
+        return self::getService($method);
+    }
+
+    public static function getService(string $name)
+    {
+        if (null === self::$_client) {
+            self::$_client = new SalesteerClient();
+        }
+
+        return self::$_client->getService($name);
+    }
 
     public static function getApiKey()
     {
@@ -51,16 +71,6 @@ abstract class Salesteer
     public static function setTenantDomain($tenantDomain)
     {
         self::$_tenantDomain = $tenantDomain;
-    }
-
-    public static function getTenantId()
-    {
-        return self::$_tenantDomain;
-    }
-
-    public static function setTenantId($tenantId)
-    {
-        self::$_tenantId = $tenantId;
     }
 
     public static function getApiVersion()
