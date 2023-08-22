@@ -16,7 +16,7 @@ class CoreServiceFactory extends AbstractServiceFactory
         'customers' => CustomerService::class,
     ];
 
-    protected function getServiceClass($name)
+    protected function getServiceClass(string $name) : string
     {
         return array_key_exists($name, self::$classMap) ? self::$classMap[$name] : null;
     }

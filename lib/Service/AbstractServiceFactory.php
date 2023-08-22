@@ -3,6 +3,7 @@
 namespace Salesteer\Service;
 
 use Salesteer\Exception as Exception;
+use Salesteer\SalesteerClientInterface;
 
 /**
  * Abstract base class for all service factories used to expose service
@@ -16,44 +17,25 @@ use Salesteer\Exception as Exception;
  */
 abstract class AbstractServiceFactory
 {
-    /** @var \Salesteer\SalesteerClientInterface */
-    private $client;
+    private SalesteerClientInterface $client;
 
     /** @var array<string, AbstractService|AbstractServiceFactory> */
-    private $services;
+    private array $services;
 
-    /**
-     * @param \Salesteer\SalesteerClientInterface $client
-     */
-    public function __construct($client)
+    public function __construct(SalesteerClientInterface $client)
     {
         $this->client = $client;
         $this->services = [];
     }
 
-    /**
-     * @param string $name
-     *
-     * @return null|string
-     */
-    abstract protected function getServiceClass($name);
+    abstract protected function getServiceClass(string $name) : string;
 
-    /**
-     * @param string $name
-     *
-     * @return null|AbstractService|AbstractServiceFactory
-     */
-    public function __get($name)
+    public function __get(string $name) : AbstractService|AbstractServiceFactory
     {
         return $this->getService($name);
     }
 
-    /**
-     * @param string $name
-     *
-     * @return AbstractService|AbstractServiceFactory
-     */
-    public function getService($name)
+    public function getService(string $name) : AbstractService|AbstractServiceFactory
     {
         $serviceClass = $this->getServiceClass($name);
         if (null !== $serviceClass) {

@@ -4,6 +4,9 @@
 
 namespace Salesteer\Service;
 
+use Salesteer\Api as Api;
+use Salesteer\Exception as Exception;
+
 class CustomerService extends AbstractService
 {
     /**
@@ -13,9 +16,9 @@ class CustomerService extends AbstractService
      * @param null|array $params
      * @param null|array $headers
      *
-     * @throws \Salesteer\Exception\ApiErrorException if the request fails
+     * @throws Exception\ApiErrorException if the request fails
      *
-     * @return \Salesteer\Account
+     * @return Api\Resource\Customer
      */
     public function retrieve($id, $params = null, $headers = [])
     {
