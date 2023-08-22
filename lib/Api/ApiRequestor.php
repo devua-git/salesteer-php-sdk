@@ -70,8 +70,10 @@ class ApiRequestor
             'Authorization' => 'Bearer ' . $apiKey,
         ];
 
+        Salesteer::getLogger()->error($tenantDomain);
         $tenantDomain = $tenantDomain ?? Salesteer::getTenantDomain();
-        if ($tenantDomain) {
+        Salesteer::getLogger()->error($tenantDomain);
+        if (null !== $tenantDomain) {
             $defaultHeaders['X-Tenant'] = $tenantDomain;
         }
 
