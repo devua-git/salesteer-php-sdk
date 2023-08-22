@@ -9,20 +9,11 @@ use Salesteer\Salesteer;
 class ApiRequestor
 {
     private string $_apiKey;
-
     private string $_apiBase;
 
-    private static $OPTIONS_KEYS = ['api_key', 'api_base'];
-
-    /**
-     * ApiRequestor constructor.
-     *
-     * @param null|string $apiKey
-     * @param null|string $apiBase
-     */
     public function __construct()
     {
-        $this->_apiKey = Salesteer::$apiKey;
+        $this->_apiKey = Salesteer::getApiKey();
         $this->_apiBase = Salesteer::getApiBase();
     }
 
@@ -73,12 +64,22 @@ class ApiRequestor
             'uname' => $uname,
         ];
 
-        return [
+        $headers = [
             'X-Salesteer-Version' => Salesteer::getApiVersion(),
             'X-Salesteer-Client-User-Agent' => json_encode($ua),
             'User-Agent' => $uaString,
             'Authorization' => 'Bearer ' . $apiKey,
         ];
+
+        if (Salesteer::getTenantId()) {
+            $defaultHeaders['X-Salesteer-Tenant-Id'] = Salesteer::getTenantId();
+        }
+
+        if (Salesteer::getTenantDomain()) {
+            $defaultHeaders['X-Tenant'] = Salesteer::getTenantDomain();
+        }
+
+        return $headers;
     }
 
     private function _prepareRequest($method, $url, $params, $headers)
@@ -91,28 +92,8 @@ class ApiRequestor
             throw new Exception\AuthenticationException($msg);
         }
 
-        if ($params && is_array($params)) {
-            $optionKeysInParams = array_filter(
-                self::$OPTIONS_KEYS,
-                function ($key) use ($params) {
-                    return array_key_exists($key, $params);
-                }
-            );
-
-            if (count($optionKeysInParams) > 0) {
-                $message = sprintf('Options found in $params: %s. Options should '
-                  . 'be passed in their own array after $params. (HINT: pass an '
-                  . 'empty array to $params if you do not have any.)', implode(', ', $optionKeysInParams));
-                trigger_error($message, E_USER_WARNING);
-            }
-        }
-
         $absUrl = $this->_apiBase . $url;
         $defaultHeaders = $this->_defaultHeaders($this->_apiKey);
-
-        if (Salesteer::$tenantId) {
-            $defaultHeaders['X-Salesteer-Tenant-Id'] = Salesteer::$tenantId;
-        }
 
         $defaultHeaders['Content-Type'] = 'application/json';
         $finalHeaders = array_merge($defaultHeaders, $headers);

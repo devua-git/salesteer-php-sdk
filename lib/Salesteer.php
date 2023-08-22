@@ -3,6 +3,7 @@
 namespace Salesteer;
 
 use Salesteer\Util as Util;
+use Salesteer\Util\LoggerInterface;
 
 abstract class Salesteer
 {
@@ -12,30 +13,30 @@ abstract class Salesteer
 
     const DEFAULT_TENANT_API_BASE = 'http://api.crm.local/app';
 
-    public static string $apiKey;
+    private static string|null $_apiKey = null;
 
-    public static string $tenantId;
+    private static string|null $_tenantId = null;
 
-    public static string $tenantDomain;
+    private static string|null $_tenantDomain = null;
 
-    public static $apiVersion = Util\ApiVersion::CURRENT;
+    private static string|null $_apiVersion = Util\ApiVersion::CURRENT;
 
-    public static $logger = null;
+    private static LoggerInterface|null $_logger = null;
 
-    public static $enableTelemetry = true;
+    private static bool $_enableTelemetry = true;
 
     public static function getApiKey()
     {
-        return self::$apiKey;
+        return self::$_apiKey;
     }
 
     public static function setApiKey($apiKey)
     {
-        self::$apiKey = $apiKey;
+        self::$_apiKey = $apiKey;
     }
 
     public static function getApiBase(){
-        if(self::$tenantDomain){
+        if(self::$_tenantDomain){
             return self::DEFAULT_TENANT_API_BASE;
         }else{
             return self::DEFAULT_CENTRAL_API_BASE;
@@ -44,55 +45,55 @@ abstract class Salesteer
 
     public static function getTenantDomain()
     {
-        return self::$tenantDomain;
+        return self::$_tenantDomain;
     }
 
     public static function setTenantDomain($tenantDomain)
     {
-        self::$tenantDomain = $tenantDomain;
+        self::$_tenantDomain = $tenantDomain;
     }
 
     public static function getTenantId()
     {
-        return self::$tenantDomain;
+        return self::$_tenantDomain;
     }
 
     public static function setTenantId($tenantId)
     {
-        self::$tenantId = $tenantId;
+        self::$_tenantId = $tenantId;
     }
 
     public static function getApiVersion()
     {
-        return self::$apiVersion;
+        return self::$_apiVersion;
     }
 
     public static function setApiVersion($apiVersion)
     {
-        self::$apiVersion = $apiVersion;
+        self::$_apiVersion = $apiVersion;
     }
 
     public static function getLogger()
     {
-        if (null === self::$logger) {
+        if (null === self::$_logger) {
             return new Util\DefaultLogger();
         }
 
-        return self::$logger;
+        return self::$_logger;
     }
 
     public static function setLogger($logger)
     {
-        self::$logger = $logger;
+        self::$_logger = $logger;
     }
 
     public static function getEnableTelemetry()
     {
-        return self::$enableTelemetry;
+        return self::$_enableTelemetry;
     }
 
     public static function setEnableTelemetry($enableTelemetry)
     {
-        self::$enableTelemetry = $enableTelemetry;
+        self::$_enableTelemetry = $enableTelemetry;
     }
 }
