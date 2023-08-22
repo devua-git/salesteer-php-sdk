@@ -3,19 +3,22 @@
 namespace Salesteer;
 
 use Salesteer\Service as Service;
-use Salesteer\Service\AbstractServiceFactory;
-use Salesteer\Service\CoreServiceFactory;
 
+/**
+ * Client used to send requests to Stripe's API.
+ *
+ * @property Service\CustomerService $customers
+ */
 class SalesteerClient implements SalesteerClientInterface
 {
-    private CoreServiceFactory|null $coreServiceFactory = null;
+    private Service\CoreServiceFactory|null $coreServiceFactory = null;
 
-    public function __get($name) : AbstractServiceFactory
+    public function __get(string $name)
     {
         return $this->getService($name);
     }
 
-    public function getService($name) : AbstractServiceFactory
+    public function getService(string $name)
     {
         if (null === $this->coreServiceFactory) {
             $this->coreServiceFactory = new Service\CoreServiceFactory($this);
