@@ -2,6 +2,7 @@
 
 namespace Salesteer\Util;
 
+use Exception as GlobalException;
 use Salesteer\Exception as Exception;
 
 class DefaultLogger implements LoggerInterface
@@ -12,7 +13,7 @@ class DefaultLogger implements LoggerInterface
     /** @var null|string */
     public $destination;
 
-    public function error($message, array $context = [])
+    public function error(string|\Stringable $message, array $context = []): void
     {
         if (count($context) > 0) {
             throw new Exception\BadMethodCallException('DefaultLogger does not currently implement context. Please implement if you need it.');
@@ -23,5 +24,44 @@ class DefaultLogger implements LoggerInterface
         } else {
             error_log($message, $this->messageType, $this->destination);
         }
+    }
+    public function emergency(string|\Stringable $message, array $context = []): void
+    {
+        throw new GlobalException('Non implemented');
+    }
+
+    public function alert(string|\Stringable $message, array $context = []): void
+    {
+        throw new GlobalException('Non implemented');
+    }
+
+    public function critical(string|\Stringable $message, array $context = []): void
+    {
+        throw new GlobalException('Non implemented');
+    }
+
+    public function warning(string|\Stringable $message, array $context = []): void
+    {
+        throw new GlobalException('Non implemented');
+    }
+
+    public function notice(string|\Stringable $message, array $context = []): void
+    {
+        throw new GlobalException('Non implemented');
+    }
+
+    public function info(string|\Stringable $message, array $context = []): void
+    {
+        throw new GlobalException('Non implemented');
+    }
+
+    public function debug(string|\Stringable $message, array $context = []): void
+    {
+        throw new GlobalException('Non implemented');
+    }
+
+    public function log($level, string|\Stringable $message, array $context = []): void
+    {
+        throw new GlobalException('Non implemented');
     }
 }
