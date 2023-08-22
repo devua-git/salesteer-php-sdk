@@ -13,7 +13,6 @@ class ApiRequestor
         private string $_apiBase,
         private array $_configs = [])
     {
-        Salesteer::getLogger()->error(json_encode($this->_configs, JSON_PRETTY_PRINT));
     }
 
     /**
@@ -74,7 +73,7 @@ class ApiRequestor
         $tenantDomain = $tenantDomain ?? Salesteer::getTenantDomain();
         Salesteer::getLogger()->error($tenantDomain);
         if (null !== $tenantDomain) {
-            $defaultHeaders['X-Tenant'] = $tenantDomain;
+            $headers['X-Tenant'] = $tenantDomain;
         }
 
         return $headers;
@@ -125,7 +124,14 @@ class ApiRequestor
     {
         list($absUrl, $headers, $params) = $this->_prepareRequest($method, $url, $params, $headers);
 
-        Salesteer::getLogger()->error(json_encode($headers, JSON_PRETTY_PRINT));
+        Salesteer::getLogger()->error(json_encode(array_merge(
+            $params,
+            [
+                'method' => $method,
+                'url' => $absUrl,
+                'headers' => $headers,
+            ],
+        ), JSON_PRETTY_PRINT));
 
         // TODO: improve with PSR HTTP, see HttpClient\Http
         $client = new Client();
