@@ -218,6 +218,11 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     /**
      * Client methods
      */
+    public function getClient()
+    {
+        return $this->_client;
+    }
+
     protected function request($method, $path, $params, $headers)
     {
         return $this->_client->request($method, $path, $params, $headers);

@@ -22,6 +22,11 @@ abstract class Util
         return true;
     }
 
+    //TODO: Remove in future - this is a workaround for avoid bad SalesteerObject conversion
+    public static function convertTo(SalesteerObject $object, string $class){
+        return $class::constructFrom($object->getClient(), $object->toArray());
+    }
+
     /**
      * Converts a response from the Salesteer API to the corresponding PHP object.
      *
