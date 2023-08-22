@@ -9,7 +9,7 @@ trait Drop
     /**
      * @throws Exception\ApiErrorException
      */
-    public function save($headers = null)
+    public function drop($headers = null)
     {
         $url = $this->instanceUrl();
         $this->_request('delete', $url, null, $headers);
