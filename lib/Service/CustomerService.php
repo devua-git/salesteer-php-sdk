@@ -14,7 +14,7 @@ class CustomerService extends AbstractService
      */
     public function retrieve(int $id, array $params = null, array $headers = []) : Api\Resource\Customer
     {
-        $url = $this->buildPath('/%s', $id, Api\Resource\Customer::classUrl());
+        $url = $this->buildPath('%s', $id, Api\Resource\Customer::classUrl());
         return $this->request('get', $url, $params, $headers);
     }
 
