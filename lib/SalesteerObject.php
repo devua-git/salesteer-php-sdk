@@ -57,7 +57,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     {
         foreach ($values as $k => $v) {
             $this->_values[$k] = Util\Util::convertToSalesteerObject(
-                $this->client,
+                $this->_client,
                 $v,
                 $this->_headers
             );
