@@ -4,9 +4,12 @@ namespace Salesteer;
 
 use Salesteer\Util as Util;
 
-class Salesteer
+abstract class Salesteer
 {
+    const VERSION = '1.0.0';
+
     const DEFAULT_CENTRAL_API_BASE = 'http://api.crm.local/api';
+
     const DEFAULT_TENANT_API_BASE = 'http://api.crm.local/app';
 
     public static string $apiKey;
@@ -21,8 +24,6 @@ class Salesteer
 
     public static $enableTelemetry = true;
 
-    const VERSION = '1.0.0';
-
     public static function getApiKey()
     {
         return self::$apiKey;
@@ -33,7 +34,7 @@ class Salesteer
         self::$apiKey = $apiKey;
     }
 
-    public function getApiBase(){
+    public static function getApiBase(){
         if(self::$tenantDomain){
             return self::DEFAULT_TENANT_API_BASE;
         }else{
