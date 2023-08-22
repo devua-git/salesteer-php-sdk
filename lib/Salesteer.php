@@ -6,25 +6,19 @@ use Salesteer\Util as Util;
 
 class Salesteer
 {
-    /** @var string The Salesteer API key to be used for requests. */
-    public static $apiKey;
+    const DEFAULT_CENTRAL_API_BASE = 'http://api.crm.local/api';
+    const DEFAULT_TENANT_API_BASE = 'http://api.crm.local/app';
 
-    /** @var string The Salesteer tenant_id to be used for Connect requests. */
-    public static $tenantId;
+    public static string $apiKey;
 
-    /** @var string The base URL for the Salesteer API. */
-    public static $apiBase = 'https://api.salesteer.com';
+    public static string $tenantId;
 
-    /** @var string The version of the Salesteer API to use for requests. */
+    public static string $tenantDomain;
+
     public static $apiVersion = Util\ApiVersion::CURRENT;
 
-    /**
-     * @var null|Util\LoggerInterface the logger to which the library will
-     *   produce messages
-     */
     public static $logger = null;
 
-    /** @var bool Whether client telemetry is enabled. Defaults to true. */
     public static $enableTelemetry = true;
 
     const VERSION = '1.0.0';
@@ -34,51 +28,49 @@ class Salesteer
         return self::$apiKey;
     }
 
-    /**
-     * Sets the API key to be used for requests.
-     *
-     * @param string $apiKey
-     */
     public static function setApiKey($apiKey)
     {
         self::$apiKey = $apiKey;
     }
 
-    public static function getTenantId()
-    {
-        return self::$tenantId;
+    public function getApiBase(){
+        if(self::$tenantDomain){
+            return self::DEFAULT_TENANT_API_BASE;
+        }else{
+            return self::DEFAULT_CENTRAL_API_BASE;
+        }
     }
 
-    /**
-     * Sets the client_id to be used for Connect requests.
-     *
-     * @param string $tenantId
-     */
+    public static function getTenantDomain()
+    {
+        return self::$tenantDomain;
+    }
+
+    public static function setTenantDomain($tenantDomain)
+    {
+        self::$tenantDomain = $tenantDomain;
+    }
+
+    public static function getTenantId()
+    {
+        return self::$tenantDomain;
+    }
+
     public static function setTenantId($tenantId)
     {
         self::$tenantId = $tenantId;
     }
 
-    /**
-     * @return string the API version used for requests
-     */
     public static function getApiVersion()
     {
         return self::$apiVersion;
     }
 
-    /**
-     * @param string $apiVersion the API version to use for requests
-     */
     public static function setApiVersion($apiVersion)
     {
         self::$apiVersion = $apiVersion;
     }
 
-    /**
-     * @return Util\LoggerInterface the logger to which the library will
-     *   produce messages
-     */
     public static function getLogger()
     {
         if (null === self::$logger) {
@@ -88,10 +80,6 @@ class Salesteer
         return self::$logger;
     }
 
-    /**
-     * @param \Psr\Log\LoggerInterface|Util\LoggerInterface $logger the logger to which the library
-     *   will produce messages
-     */
     public static function setLogger($logger)
     {
         self::$logger = $logger;

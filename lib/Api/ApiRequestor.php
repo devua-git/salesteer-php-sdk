@@ -20,17 +20,10 @@ class ApiRequestor
      * @param null|string $apiKey
      * @param null|string $apiBase
      */
-    public function __construct($apiKey = null, $apiBase = null)
+    public function __construct()
     {
-        if (!$apiKey) {
-            $apiKey = Salesteer::$apiKey;
-        }
-        $this->_apiKey = $apiKey;
-
-        if (!$apiBase) {
-            $apiBase = Salesteer::$apiBase;
-        }
-        $this->_apiBase = $apiBase;
+        $this->_apiKey = Salesteer::$apiKey;
+        $this->_apiBase = Salesteer::getApiBase();
     }
 
     /**

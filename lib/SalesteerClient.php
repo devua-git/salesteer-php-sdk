@@ -2,45 +2,44 @@
 
 namespace Salesteer;
 
-use Salesteer\Util as Util;
-use Salesteer\Exception as Exception;
+use Salesteer\Service as Service;
 
-class SalesteerClient
+class SalesteerClient implements SalesteerClientInterface
 {
-    /** @var string default base URL for Salesteer's API */
-    const DEFAULT_API_BASE = 'https://api.salesteer.com';
+    /** @var CoreServiceFactory */
+    private $coreServiceFactory;
 
-    /** @var array<string, null|string> */
-    const DEFAULT_CONFIG = [
-        'api_key' => null,
-        'tenant_id' => null,
-        'version' => Util\ApiVersion::CURRENT,
-        'api_base' => self::DEFAULT_API_BASE,
-    ];
-
-    /** @var array<string, mixed> */
-    private $config;
-
-    public function __construct($config = [])
+    public function __get($name)
     {
-        if (is_string($config)) {
-            $config = ['api_key' => $config];
-        } elseif (!is_array($config)) {
-            throw new Exception\InvalidArgumentException('$config must be a string or an array');
+        return $this->getService($name);
+    }
+
+    public function getService($name)
+    {
+        if (null === $this->coreServiceFactory) {
+            $this->coreServiceFactory = new Service\CoreServiceFactory($this);
         }
 
-        $config = array_merge(self::DEFAULT_CONFIG, $config);
-        $this->validateConfig($config);
-
-        $this->config = $config;
+        return $this->coreServiceFactory->getService($name);
     }
 
     /**
-     * @param array<string, mixed> $config
+     * Sends a request to Salesteer's API.
      *
-     * @throws Exception\InvalidArgumentException
+     * @param 'delete'|'get'|'post'|'patch'|'put' $method the HTTP method
+     * @param string $path the path of the request
+     * @param array $params the parameters of the request
+     * @param array $headers
+     *
+     * @return SalesteerObject the object returned by Salesteer's API
      */
-    private function validateConfig($config)
+    public function request($method, $path, $params, $headers)
     {
+        $requestor = new Api\ApiRequestor();
+        $response = $requestor->request($method, $path, $params, $headers);
+
+        $obj = Util\Util::convertToSalesteerObject($response->json, $headers);
+
+        return $obj;
     }
 }

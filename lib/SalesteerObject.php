@@ -5,28 +5,19 @@ namespace Salesteer;
 use ArrayAccess;
 use Countable;
 use JsonSerializable;
+use Salesteer\Util as Util;
 
 class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
 {
     const OBJECT_NAME = 'object';
 
-    /** @var array */
-    protected $_values;
+    protected array $_values;
 
-    /** @var bool */
-    //TODO: setted to bool to find errors
-    protected $_opts;
+    protected bool $_opts;
 
-    /** @var array */
-    protected $_headers;
+    protected array $_headers;
 
-    /**
-     * @param array $values
-     * @param null|array $headers
-     *
-     * @return self
-     */
-    public function __construct(protected $id = null, $headers = [])
+    public function __construct(protected $id = null, ?array $headers = [])
     {
         $this->_values = [];
         $this->_values = $headers;
@@ -36,13 +27,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         }
     }
 
-    /**
-     * @param array $values
-     * @param null|array $headers
-     *
-     * @return static the object constructed from the given values
-     */
-    public static function constructFrom($values, $headers = null)
+    public static function constructFrom(array $values, ?array $headers = null)
     {
         $obj = new static($values['id'] ?? null, $headers);
         $obj->refreshFrom($values);
@@ -50,12 +35,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         return $obj;
     }
 
-    /**
-     * Refreshes this object using the provided values.
-     *
-     * @param array $values
-     */
-    public function refreshFrom($values)
+    public function refreshFrom(array $values) : void
     {
         if ($values instanceof SalesteerObject) {
             $values = $values->toArray();
@@ -70,22 +50,14 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         $this->updateAttributes($values);
     }
 
-    /**
-     * Mass assigns attributes on the model.
-     *
-     * @param array $values
-     */
-    public function updateAttributes($values)
+    public function updateAttributes(array $values) : void
     {
         foreach ($values as $k => $v) {
             $this->_values[$k] = Util\Util::convertToSalesteerObject($v);
         }
     }
 
-    /**
-     * @return Util\Set Attributes that should not be sent to the API because they're not updatable (e.g. ID).
-     */
-    public static function getPermanentAttributes()
+    public static function getPermanentAttributes(): Util\Set
     {
         static $permanentAttributes = null;
         if (null === $permanentAttributes) {
@@ -95,7 +67,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         return $permanentAttributes;
     }
 
-    public function toArray()
+    public function toArray() : array
     {
         $maybeToArray = function ($value) {
             if (null === $value) {
