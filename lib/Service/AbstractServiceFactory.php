@@ -2,6 +2,8 @@
 
 namespace Salesteer\Service;
 
+use Salesteer\Exception as Exception;
+
 /**
  * Abstract base class for all service factories used to expose service
  * instances through {@link \Salesteer\SalesteerClient}.
@@ -49,7 +51,7 @@ abstract class AbstractServiceFactory
     /**
      * @param string $name
      *
-     * @return null|AbstractService|AbstractServiceFactory
+     * @return AbstractService|AbstractServiceFactory
      */
     public function getService($name)
     {
@@ -62,8 +64,6 @@ abstract class AbstractServiceFactory
             return $this->services[$name];
         }
 
-        trigger_error('Undefined property: ' . static::class . '::$' . $name);
-
-        return null;
+        throw new Exception\UnexpectedValueException('Undefined property: ' . static::class . '::$' . $name);
     }
 }

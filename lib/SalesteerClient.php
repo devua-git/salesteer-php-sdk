@@ -3,6 +3,8 @@
 namespace Salesteer;
 
 use Salesteer\Service as Service;
+use Salesteer\Service\AbstractServiceFactory;
+use Salesteer\Service\CoreServiceFactory;
 
 class SalesteerClient implements SalesteerClientInterface
 {
@@ -14,7 +16,7 @@ class SalesteerClient implements SalesteerClientInterface
         return $this->getService($name);
     }
 
-    public function getService($name)
+    public function getService($name) : AbstractServiceFactory
     {
         if (null === $this->coreServiceFactory) {
             $this->coreServiceFactory = new Service\CoreServiceFactory($this);
