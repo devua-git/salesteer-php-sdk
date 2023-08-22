@@ -8,7 +8,10 @@ use Salesteer\Salesteer;
 
 class ApiRequestor
 {
-    public function __construct(private string $_apiKey, private string $_apiBase)
+    public function __construct(
+        private string $_apiKey,
+        private string $_apiBase,
+        private array $_configs = [])
     {
     }
 
@@ -43,7 +46,7 @@ class ApiRequestor
      *
      * @return array
      */
-    private static function _defaultHeaders($apiKey)
+    private static function _defaultHeaders($apiKey, $tenantDomain = null)
     {
         $uaString = 'Salesteer/v1 PHP/' . Salesteer::VERSION. ' ';
 
@@ -66,12 +69,9 @@ class ApiRequestor
             'Authorization' => 'Bearer ' . $apiKey,
         ];
 
-        if (Salesteer::getTenantId()) {
-            $defaultHeaders['X-Salesteer-Tenant-Id'] = Salesteer::getTenantId();
-        }
-
-        if (Salesteer::getTenantDomain()) {
-            $defaultHeaders['X-Tenant'] = Salesteer::getTenantDomain();
+        $tenantDomain = $tenantDomain ?? Salesteer::getTenantDomain();
+        if ($tenantDomain) {
+            $defaultHeaders['X-Tenant'] = $tenantDomain;
         }
 
         return $headers;
@@ -88,7 +88,7 @@ class ApiRequestor
         }
 
         $absUrl = $this->_apiBase . $url;
-        $defaultHeaders = $this->_defaultHeaders($this->_apiKey);
+        $defaultHeaders = $this->_defaultHeaders($this->_apiKey, $this->_configs['tenant_domain']);
 
         $defaultHeaders['Content-Type'] = 'application/json';
         $finalHeaders = array_merge($defaultHeaders, $headers);

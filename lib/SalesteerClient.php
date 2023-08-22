@@ -60,7 +60,8 @@ class SalesteerClient implements SalesteerClientInterface
     {
         $requestor = new Api\ApiRequestor(
             $this->_configs['api_key'],
-            Salesteer::getApiBase($this->_configs['tenant_domain'])
+            Salesteer::getApiBase($this->_configs['tenant_domain']),
+            $this->_configs,
         );
 
         $response = $requestor->request($method, $path, $params, $headers);
