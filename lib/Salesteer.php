@@ -100,13 +100,10 @@ abstract class Salesteer
         return self::$_client;
     }
 
-    public static function __callStatic($method, $args = null)
+    public static function __callStatic($method, array $args = [])
     {
-        if(method_exists(self::class, $method)){
-            self::{$method}($args);
-        }
-
-        if(null !== $args){
+        if(count($args) > 0){
+            self::getLogger()->error(json_encode($args, JSON_PRETTY_PRINT));
             throw new Exception\InvalidArgumentException('You cannot pass arguments to static services.');
         }
         return self::getService($method);
