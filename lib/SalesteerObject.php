@@ -7,19 +7,26 @@ use Countable;
 use JsonSerializable;
 use Salesteer\Util as Util;
 
+
 class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
 {
     const OBJECT_NAME = 'object';
 
+    private SalesteerClientInterface|null $_client = null;
+
     private array $_values;
 
-    private bool $_opts;
-
     public function __construct(
-        private SalesteerClientInterface $_client,
+        SalesteerClientInterface $client = null,
         protected $id = null,
         private ?array $_headers = [])
     {
+        $this->_client = $client ?? Salesteer::getClient();
+
+        if(null === $this->_client){
+            throw new Exception\InvalidArgumentException('SalesteerClient cannot be null');
+        }
+
         $this->_values = [];
 
         if (null !== $id) {
@@ -28,9 +35,10 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     }
 
     public static function constructFrom(
-        SalesteerClient $client,
         array $values,
-        ?array $headers = null)
+        ?array $headers = null,
+        SalesteerClient $client = null,
+        )
     {
         $obj = new static($client, $values['id'] ?? null, $headers);
         $obj->refreshFrom($values);
@@ -97,6 +105,52 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
 
             return $acc;
         }, []);
+    }
+
+    public function serializeToParameters()
+    {
+        $updateParams = [];
+
+        foreach ($this->_values as $k => $v) {
+            $updateParams[$k] = $this->serializeParamsValue(
+                $this->_values[$k], $k
+            );
+        }
+
+        return array_filter(
+            $updateParams,
+            function ($v) {
+                return null !== $v;
+            }
+        );
+    }
+
+    public function serializeParamsValue($value, $key = null)
+    {
+        if (null === $value) {
+            return '';
+        }
+
+        if (is_array($value)) {
+            if (Util\Util::isList($value)) {
+                // Standard array
+                $update = [];
+                foreach ($value as $v) {
+                    $update[] = $this->serializeParamsValue($v);
+                }
+            } else {
+                // Removing relationships
+                return null;
+                // return Util\Util::convertToStripeObject($value, $this->_headers)->serializeParameters();
+            }
+        } elseif ($value instanceof SalesteerObject) {
+            // Removing relationships
+            return null;
+            // $update = $value->serializeToParameters();
+            // return $update;
+        } else {
+            return $value;
+        }
     }
 
     public function jsonSerialize()
@@ -167,7 +221,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         }
 
         $class = static::class;
-        // Salesteer::getLogger()->error("Salesteer Notice: Undefined property of {$class} instance: {$k}");
+        Salesteer::getLogger()->warning("Salesteer Notice: Undefined property of {$class} instance: {$k}");
 
         return $nullval;
     }

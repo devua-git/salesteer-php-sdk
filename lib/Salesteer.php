@@ -39,11 +39,15 @@ abstract class Salesteer
 
     public static function getService(string $name)
     {
+        return self::getClient()->getService($name);
+    }
+
+    public static function getClient()
+    {
         if (null === self::$_client) {
             self::$_client = new SalesteerClient();
         }
-
-        return self::$_client->getService($name);
+        return self::$_client;
     }
 
     public static function getApiKey()
