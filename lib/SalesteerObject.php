@@ -35,7 +35,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     }
 
     public static function constructFrom(
-        array $values,
+        $values,
         SalesteerClient $client = null,
         ?array $headers = null,
         )
@@ -46,7 +46,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         return $obj;
     }
 
-    public function refreshFrom(array $values) : void
+    public function refreshFrom($values) : void
     {
         if ($values instanceof SalesteerObject) {
             $values = $values->toArray();
@@ -61,12 +61,12 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         $this->updateAttributes($values);
     }
 
-    public function fill(array $values) : void
+    public function fill($values) : void
     {
         $this->updateAttributes($values);
     }
 
-    public function updateAttributes(array $values) : void
+    public function updateAttributes($values) : void
     {
         foreach ($values as $k => $v) {
             $this->_values[$k] = Util\Util::convertToSalesteerObject(
