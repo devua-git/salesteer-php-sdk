@@ -3,6 +3,7 @@
 namespace Salesteer;
 
 use Salesteer\Util as Util;
+use Salesteer\Exception as Exception;
 use Psr\Log\LoggerInterface;
 
 /**

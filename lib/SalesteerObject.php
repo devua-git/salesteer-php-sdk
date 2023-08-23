@@ -6,7 +6,7 @@ use ArrayAccess;
 use Countable;
 use JsonSerializable;
 use Salesteer\Util as Util;
-
+use Salesteer\Exception as Exception;
 
 class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
 {

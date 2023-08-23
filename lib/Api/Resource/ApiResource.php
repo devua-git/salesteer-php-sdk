@@ -2,9 +2,9 @@
 
 namespace Salesteer\Api\Resource;
 
+use Salesteer\Salesteer;
 use Salesteer\SalesteerObject;
 use Salesteer\Exception as Exception;
-use Salesteer\Salesteer;
 
 abstract class ApiResource extends SalesteerObject
 {

@@ -3,8 +3,8 @@
 namespace Salesteer\Util;
 
 use Exception as GlobalException;
-use Salesteer\Exception as Exception;
 use Psr\Log\LoggerInterface;
+use Salesteer\Exception as Exception;
 
 class DefaultLogger implements LoggerInterface
 {

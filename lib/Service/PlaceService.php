@@ -5,8 +5,8 @@
 namespace Salesteer\Service;
 
 use Salesteer\Api as Api;
-use Salesteer\Exception as Exception;
 use Salesteer\Util as Util;
+use Salesteer\Exception as Exception;
 
 class PlaceService extends AbstractService
 {

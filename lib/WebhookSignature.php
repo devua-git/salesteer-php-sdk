@@ -2,6 +2,8 @@
 
 namespace Salesteer;
 
+use Salesteer\Exception as Exception;
+
 class WebhookSignature
 {
     public static function verifyHeader($payload, $secret,  $tolerance = null)

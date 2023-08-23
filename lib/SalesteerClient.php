@@ -3,6 +3,7 @@
 namespace Salesteer;
 
 use Salesteer\Service as Service;
+use Salesteer\Exception as Exception;
 
 /**
  * Client used to send requests to Stripe's API.

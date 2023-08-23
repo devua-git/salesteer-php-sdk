@@ -3,8 +3,8 @@
 namespace Salesteer\Api;
 
 use GuzzleHttp\Client;
-use Salesteer\Exception as Exception;
 use Salesteer\Salesteer;
+use Salesteer\Exception as Exception;
 
 class ApiRequestor
 {
