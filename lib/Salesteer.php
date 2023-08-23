@@ -30,27 +30,6 @@ abstract class Salesteer
 
     private static SalesteerClient|null $_client = null;
 
-    public static function __callStatic($method, $args = null)
-    {
-        if(null !== $args){
-            throw new Exception\InvalidArgumentException('You cannot pass arguments to static services.');
-        }
-        return self::getService($method);
-    }
-
-    public static function getService(string $name)
-    {
-        return self::getClient()->getService($name);
-    }
-
-    public static function getClient()
-    {
-        if (null === self::$_client) {
-            self::$_client = new SalesteerClient();
-        }
-        return self::$_client;
-    }
-
     public static function getApiKey()
     {
         return self::$_apiKey;
@@ -111,5 +90,30 @@ abstract class Salesteer
     public static function setEnableTelemetry($enableTelemetry)
     {
         self::$_enableTelemetry = $enableTelemetry;
+    }
+
+    public static function getClient()
+    {
+        if (null === self::$_client) {
+            self::$_client = new SalesteerClient();
+        }
+        return self::$_client;
+    }
+
+    public static function __callStatic($method, $args = null)
+    {
+        if(method_exists(self::class, $method)){
+            self::{$method}($args);
+        }
+
+        if(null !== $args){
+            throw new Exception\InvalidArgumentException('You cannot pass arguments to static services.');
+        }
+        return self::getService($method);
+    }
+
+    public static function getService(string $name)
+    {
+        return self::getClient()->getService($name);
     }
 }
