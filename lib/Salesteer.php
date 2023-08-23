@@ -14,9 +14,9 @@ abstract class Salesteer
 {
     const VERSION = '1.0.0';
 
-    const DEFAULT_CENTRAL_API_BASE = 'http://api.crm.local/api';
+    const DEFAULT_CENTRAL_API_BASE = 'http://api.crm.local/central';
 
-    const DEFAULT_TENANT_API_BASE = 'http://api.crm.local/app';
+    const DEFAULT_TENANT_API_BASE = 'http://api.crm.local/api';
 
     private static string|null $_apiKey = null;
 
