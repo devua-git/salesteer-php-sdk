@@ -61,6 +61,11 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         $this->updateAttributes($values);
     }
 
+    public function fill(array $values) : void
+    {
+        $this->updateAttributes($values);
+    }
+
     public function updateAttributes(array $values) : void
     {
         foreach ($values as $k => $v) {
