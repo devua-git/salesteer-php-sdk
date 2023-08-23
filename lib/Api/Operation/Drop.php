@@ -12,6 +12,6 @@ trait Drop
     public function drop($headers = null)
     {
         $url = $this->instanceUrl();
-        $this->_request('delete', $url, null, $headers);
+        $this->request('delete', $url, null, $headers);
     }
 }

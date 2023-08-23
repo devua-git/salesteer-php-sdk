@@ -30,9 +30,6 @@ abstract class Util
     /**
      * Converts a response from the Salesteer API to the corresponding PHP object.
      *
-     * @param array $resp the response from the Salesteer API
-     * @param array $opts
-     *
      * @return array|SalesteerObject
      */
     public static function convertToSalesteerObject(
