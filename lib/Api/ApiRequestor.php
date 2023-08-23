@@ -66,6 +66,7 @@ class ApiRequestor
             'X-Salesteer-Version' => Salesteer::getApiVersion(),
             'X-Salesteer-Client-User-Agent' => json_encode($ua),
             'User-Agent' => $uaString,
+            'Accept' => 'application/json',
             'Authorization' => 'Bearer ' . $apiKey,
         ];
 
