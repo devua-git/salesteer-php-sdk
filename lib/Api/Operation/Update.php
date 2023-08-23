@@ -11,7 +11,7 @@ trait Update
      */
     public function save($headers = null)
     {
-        $params = $this->serializeParameters();
+        $params = $this->serializeToParameters();
 
         $url = $this->instanceUrl();
         $res = $this->_request('patch', $url, $params, $headers);
