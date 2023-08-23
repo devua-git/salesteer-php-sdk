@@ -103,7 +103,7 @@ class ApiRequestor
         if('get' === $method){
             $params = ['query' => $params];
         }else{
-            $params = ['body' => $params];
+            $params = ['json' => $params];
         }
 
         return [$absUrl, $finalHeaders, $params];
