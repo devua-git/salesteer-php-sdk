@@ -40,7 +40,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         ?array $headers = null,
         )
     {
-        $obj = new static($client, $values['id'] ?? null, $headers);
+        $obj = new static($values['id'] ?? null, $client, $headers);
         $obj->refreshFrom($values);
 
         return $obj;
