@@ -128,7 +128,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     public function serializeParamsValue($value, $key = null)
     {
         if (null === $value) {
-            return '';
+            return null;
         }
 
         if (is_array($value)) {
