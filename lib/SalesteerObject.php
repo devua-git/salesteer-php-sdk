@@ -17,8 +17,8 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     private array $_values;
 
     public function __construct(
-        SalesteerClientInterface $client = null,
         protected $id = null,
+        SalesteerClientInterface $client = null,
         private ?array $_headers = [])
     {
         $this->_client = $client ?? Salesteer::getClient();
@@ -36,8 +36,8 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
 
     public static function constructFrom(
         array $values,
-        ?array $headers = null,
         SalesteerClient $client = null,
+        ?array $headers = null,
         )
     {
         $obj = new static($client, $values['id'] ?? null, $headers);
@@ -65,8 +65,8 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     {
         foreach ($values as $k => $v) {
             $this->_values[$k] = Util\Util::convertToSalesteerObject(
-                $this->_client,
                 $v,
+                $this->_client,
                 $this->_headers
             );
         }
@@ -196,8 +196,8 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         }
 
         $this->_values[$k] = Util\Util::convertToSalesteerObject(
-            $this->_client,
             $v,
+            $this->_client,
             $this->_headers
         );
     }

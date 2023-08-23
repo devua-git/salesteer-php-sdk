@@ -24,7 +24,7 @@ abstract class Util
 
     //TODO: Remove in future - this is a workaround for avoid bad SalesteerObject conversion
     public static function convertTo(SalesteerObject $object, string $class){
-        return $class::constructFrom($object->getClient(), $object->toArray());
+        return $class::constructFrom($object->toArray(), $object->getClient());
     }
 
     /**
@@ -36,14 +36,14 @@ abstract class Util
      * @return array|SalesteerObject
      */
     public static function convertToSalesteerObject(
-        SalesteerClientInterface $client,
         $res,
+        SalesteerClientInterface $client = null,
         array $headers = null)
     {
         if (self::isList($res)) {
             $mapped = [];
             foreach ($res as $i) {
-                $mapped[] = self::convertToSalesteerObject($client, $i, $headers);
+                $mapped[] = self::convertToSalesteerObject($i, $client, $headers);
             }
 
             return $mapped;
@@ -57,7 +57,7 @@ abstract class Util
                 $class = \Salesteer\SalesteerObject::class;
             }
 
-            return $class::constructFrom($client, $res, $headers);
+            return $class::constructFrom($res, $client, $headers);
         }
 
         return $res;

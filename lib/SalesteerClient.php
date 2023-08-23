@@ -67,7 +67,7 @@ class SalesteerClient implements SalesteerClientInterface
 
         $response = $requestor->request($method, $path, $params, $headers);
 
-        $obj = Util\Util::convertToSalesteerObject($this, $response->json, $headers);
+        $obj = Util\Util::convertToSalesteerObject($response->json, $this, $headers);
 
         return $obj;
     }
