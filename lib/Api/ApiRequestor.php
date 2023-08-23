@@ -143,6 +143,12 @@ class ApiRequestor
             ]
         ));
 
+        Salesteer::getLogger()->error(json_encode([
+            $res->getBody(),
+            $res->getStatusCode(),
+            $res->getHeaders()
+        ], JSON_PRETTY_PRINT));
+
         return [
             $res->getBody(),
             $res->getStatusCode(),
