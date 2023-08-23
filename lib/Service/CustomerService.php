@@ -11,6 +11,28 @@ use Salesteer\Util as Util;
 
 class CustomerService extends AbstractService
 {
+    const TYPE_STRING_MAP = [
+        'prospect'=> 1 << 0,
+        'account' => 1 << 1,
+        'supplier' => 1 << 2,
+    ];
+
+    /**
+     * @param array<int, 'prospect'|'account'|'supplier'>|'prospect'|'account'|'supplier' $types the customer types
+     */
+    public function getCustomerType(array|string $types){
+        if(!is_array($types)){
+            $types = [$types];
+        }
+
+        $type = 0;
+        foreach($types as $stringType){
+            $type = Util\Bitwise::setFlag($type, self::TYPE_STRING_MAP[$stringType]);
+        }
+
+        return $type;
+    }
+
     /**
      * @throws Exception\ApiErrorException if the request fails
      */
