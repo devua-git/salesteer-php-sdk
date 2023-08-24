@@ -12,4 +12,8 @@ class Person extends ApiResource
 
     const OBJECT_NAME = 'person';
     const PLURAL_NAME = 'people';
+
+    const RELATION_TO_CLASS = [
+        'legal_office' => Place::class
+    ];
 }
