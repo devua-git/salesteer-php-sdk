@@ -16,8 +16,8 @@ class PlaceService extends AbstractService
     public function retrieve(int $id, array $params = null, array $headers = []) : Api\Resource\Place
     {
         $url = $this->buildPath('%s', $id, Api\Resource\Place::classUrl());
-        $res = $this->request('get', $url, $params, $headers);
-        return Util\Util::convertTo($res, Api\Resource\Place::class);
+        $res = $this->request('get', $url, $params, $headers, Api\Resource\Place::class);
+        return $res;
     }
 
     /**
@@ -25,7 +25,7 @@ class PlaceService extends AbstractService
      */
     public function create(array $params = null, array $headers = []) : Api\Resource\Place
     {
-        $res = $this->request('post', Api\Resource\Place::classUrl(), $params, $headers);
-        return Util\Util::convertTo($res, Api\Resource\Place::class);
+        $res = $this->request('post', Api\Resource\Place::classUrl(), $params, $headers, Api\Resource\Place::class);
+        return $res;
     }
 }

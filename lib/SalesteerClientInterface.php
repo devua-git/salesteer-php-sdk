@@ -15,5 +15,5 @@ interface SalesteerClientInterface
      *
      * @return SalesteerObject the object returned by Salesteer's API
      */
-    public function request($method, $path, $params, $headers);
+    public function request($method, $path, $responseClass, $params, $headers);
 }

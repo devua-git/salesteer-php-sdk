@@ -58,7 +58,7 @@ class SalesteerClient implements SalesteerClientInterface
      *
      * @return SalesteerObject the object returned by Salesteer's API
      */
-    public function request($method, $path, $params, $headers)
+    public function request($method, $path, $responseClass, $params, $headers)
     {
         $requestor = new Api\ApiRequestor(
             $this->_configs['api_key'],
@@ -68,7 +68,7 @@ class SalesteerClient implements SalesteerClientInterface
 
         $response = $requestor->request($method, $path, $params, $headers);
 
-        $obj = Util\Util::convertToSalesteerObject($response->json, $this, $headers);
+        $obj = Util\Util::convertToSalesteerObject($response->json, $this, $headers, $responseClass);
 
         return $obj;
     }

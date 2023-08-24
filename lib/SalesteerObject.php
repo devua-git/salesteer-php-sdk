@@ -79,11 +79,15 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
                 $v,
                 $this->_client,
                 $this->_headers,
-                static::RELATION_TO_CLASS[$k] ?? null
+                $this->getRelationClass($k)
             );
 
             $this->_values[$k] = $obj;
         }
+    }
+
+    public function getRelationClass($key){
+        return static::RELATION_TO_CLASS[$key] ?? null;
     }
 
     public static function getPermanentAttributes(): Util\Set
@@ -213,7 +217,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
             $v,
             $this->_client,
             $this->_headers,
-            static::RELATION_TO_CLASS[$k] ?? null
+            $this->getRelationClass($k)
         );
     }
 
@@ -292,8 +296,8 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         return $this->_client;
     }
 
-    protected function request($method, $path, $params, $headers)
+    protected function request($method, $path, $params, $headers, $responseClass = null)
     {
-        return $this->_client->request($method, $path, $params, $headers);
+        return $this->_client->request($method, $path, $responseClass ?? static::class, $params, $headers);
     }
 }

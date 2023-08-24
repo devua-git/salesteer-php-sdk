@@ -39,8 +39,8 @@ class CustomerService extends AbstractService
     public function retrieve(int $id, array $params = null, array $headers = []) : Api\Resource\Customer
     {
         $url = $this->buildPath('%s', $id, Api\Resource\Customer::classUrl());
-        $res = $this->request('get', $url, $params, $headers);
-        return Util\Util::convertTo($res, Api\Resource\Customer::class);
+        $res = $this->request('get', $url, $params, $headers, Api\Resource\Customer::class);
+        return $res;
     }
 
     /**
@@ -49,9 +49,7 @@ class CustomerService extends AbstractService
     public function search(array $params = null, array $headers = []) : SalesteerObject
     {
         //TODO:MAKE FILTER BUILDER
-        $res = $this->request('get', Api\Resource\Customer::classUrl(true), $params, $headers);
-
-        //TODO: DO SOMETHING ABOUT PAGINATION
+        $res = $this->request('get', Api\Resource\Customer::classUrl(true), $params, $headers, Api\Resource\Customer::class);
         return $res;
     }
 
@@ -60,7 +58,7 @@ class CustomerService extends AbstractService
      */
     public function create(array $params = null, array $headers = []) : Api\Resource\Customer
     {
-        $res = $this->request('post', Api\Resource\Customer::classUrl(), $params, $headers);
-        return Util\Util::convertTo($res, Api\Resource\Customer::class);
+        $res = $this->request('post', Api\Resource\Customer::classUrl(), $params, $headers, Api\Resource\Customer::class);
+        return $res;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Salesteer\Util;
 
+use Salesteer\Api\Resource\ApiPaginateResource;
 use Salesteer\SalesteerClientInterface;
 use Salesteer\SalesteerObject;
 
@@ -22,12 +23,10 @@ abstract class Util
         return true;
     }
 
-    //TODO: Remove in future - this is a workaround for avoid bad SalesteerObject conversion
-    public static function convertTo(SalesteerObject $object, string $class){
-        $instance = new $class($object->id, $object->getClient());
-        $instance->fill($object->toArray());
-        return $instance;
+    public static function isPaginateResponse($res){
+        return isset($res['data']) && isset($res['current_page']);
     }
+
 
     /**
      * Converts a response from the Salesteer API to the corresponding PHP object.
@@ -50,21 +49,13 @@ abstract class Util
             return $mapped;
         }
 
+        if(self::isPaginateResponse($res)){
+            return ApiPaginateResource::parse($convertToClass, $res, $client, $headers);
+        }
+
         if (is_array($res)) {
-            $types = ObjectTypes::mapping;
-            if (isset($res['object']) && is_string($res['object']) && isset($types[$res['object']])) {
-                $class = $types[$res['object']];
-            } else {
-                $class = \Salesteer\SalesteerObject::class;
-            }
-
-            $obj = $class::constructFrom($res, $client, $headers);
-
-            if($convertToClass){
-                return self::convertTo($obj, $convertToClass);
-            }
-
-            return $obj;
+            $class = $convertToClass ?? SalesteerObject::class;
+            return $class::constructFrom($res, $client, $headers);
         }
 
         return $res;
