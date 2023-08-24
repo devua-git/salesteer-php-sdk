@@ -8,6 +8,7 @@ use Salesteer\Exception as Exception;
 
 abstract class ApiResource extends SalesteerObject
 {
+    const PLURAL_NAME = null;
     const IS_API_PLURAL = false;
 
     /**
@@ -28,19 +29,22 @@ abstract class ApiResource extends SalesteerObject
         return $this;
     }
 
-    public static function classUrl(bool $isApiPlural = false) : string
+    public static function classUrl(?bool $isApiPlural = null) : string
     {
-        // Replace dots with slashes for namespaced resources, e.g. if the object's name is
-        // "foo.bar", then its URL will be "/v1/foo/bars".
-        $objectName = str_replace('.', '/', static::OBJECT_NAME);
-        $plurality = ($isApiPlural || self::IS_API_PLURAL) === true ? 's' : '';
+        $isApiPlural = $isApiPlural ?? static::IS_API_PLURAL;
+        $objectName = static::OBJECT_NAME;
+
+        $resourceName = $isApiPlural
+            ? static::PLURAL_NAME ?? "{$objectName}s"
+            : "{$objectName}";
+
         $version = Salesteer::getApiVersion();
 
         if($version){
-            return "/$version/{$objectName}{$plurality}";
+            return "/$version/{$resourceName}";
         }
 
-        return "/{$objectName}{$plurality}";
+        return "/{$resourceName}";
     }
 
     public static function resourceUrl(string|int $id)

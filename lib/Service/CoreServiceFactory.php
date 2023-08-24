@@ -9,6 +9,7 @@ class CoreServiceFactory extends AbstractServiceFactory
      */
     private static $classMap = [
         'customer' => CustomerService::class,
+        'person' => PersonService::class,
         'place' => PlaceService::class,
         'offer' => OfferService::class,
     ];

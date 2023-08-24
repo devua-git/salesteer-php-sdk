@@ -8,6 +8,7 @@ use Psr\Log\LoggerInterface;
 
 /**
  * @method static Service\CustomerService customer()
+ * @method static Service\PersonService person()
  * @method static Service\PlaceService place()
  * @method static Service\OfferService offer()
  */
