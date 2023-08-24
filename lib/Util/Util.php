@@ -37,12 +37,14 @@ abstract class Util
     public static function convertToSalesteerObject(
         $res,
         SalesteerClientInterface $client = null,
-        array $headers = null)
+        array $headers = null,
+        string $convertToClass = null,
+        )
     {
         if (self::isList($res)) {
             $mapped = [];
             foreach ($res as $i) {
-                $mapped[] = self::convertToSalesteerObject($i, $client, $headers);
+                $mapped[] = self::convertToSalesteerObject($i, $client, $headers, $convertToClass);
             }
 
             return $mapped;
@@ -56,7 +58,7 @@ abstract class Util
                 $class = \Salesteer\SalesteerObject::class;
             }
 
-            return $class::constructFrom($res, $client, $headers);
+            return self::convertTo($class::constructFrom($res, $client, $headers), $convertToClass);
         }
 
         return $res;

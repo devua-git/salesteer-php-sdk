@@ -11,4 +11,8 @@ class Customer extends ApiResource
     use ApiOperation\Drop;
 
     const OBJECT_NAME = 'customer';
+
+    const RELATION_TO_CLASS = [
+        'legal_office' => Place::class
+    ];
 }

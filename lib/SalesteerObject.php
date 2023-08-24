@@ -7,14 +7,17 @@ use Countable;
 use JsonSerializable;
 use Salesteer\Util as Util;
 use Salesteer\Exception as Exception;
+use Salesteer\Util\Util as UtilUtil;
 
 class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
 {
     const OBJECT_NAME = 'object';
+    const RELATION_TO_CLASS = [];
 
     private SalesteerClientInterface|null $_client = null;
 
     private array $_values;
+
 
     public function __construct(
         protected $id = null,
@@ -73,11 +76,14 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
                 continue;
             }
 
-            $this->_values[$k] = Util\Util::convertToSalesteerObject(
+            $obj = Util\Util::convertToSalesteerObject(
                 $v,
                 $this->_client,
-                $this->_headers
+                $this->_headers,
+                self::RELATION_TO_CLASS[$k] ?? null
             );
+
+            $this->_values[$k] = $obj;
         }
     }
 
