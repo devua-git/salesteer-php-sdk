@@ -2,12 +2,10 @@
 
 namespace Salesteer\Api\Resource;
 
-use Salesteer\Salesteer;
 use Salesteer\SalesteerObject;
-use Salesteer\Exception as Exception;
 use Salesteer\SalesteerClient;
 
-abstract class ApiPaginateResource extends SalesteerObject
+class ApiPaginateResource extends SalesteerObject
 {
     public $resourceClass = null;
 
