@@ -14,9 +14,7 @@ abstract class Salesteer
 {
     const VERSION = '1.0.0';
 
-    const DEFAULT_CENTRAL_API_BASE = 'http://crm-api-laravel.test-1/central';
-
-    const DEFAULT_TENANT_API_BASE = 'http://crm-api-laravel.test-1/api';
+    private static string $_apiBase = 'https://api.salesteer.com';
 
     private static string|null $_apiKey = null;
 
@@ -40,12 +38,16 @@ abstract class Salesteer
         self::$_apiKey = $apiKey;
     }
 
-    public static function getApiBase(){
-        if(self::$_tenantDomain){
-            return self::DEFAULT_TENANT_API_BASE;
+    public static function getApiBase($domain = null){
+        if($domain ?? self::$_tenantDomain){
+            return self::$_apiBase.'/api';
         }else{
-            return self::DEFAULT_CENTRAL_API_BASE;
+            return self::$_apiBase.'/central';
         }
+    }
+
+    public static function setApiBase(string $apiBase){
+        self::$_apiBase = $apiBase;
     }
 
     public static function getTenantDomain()
