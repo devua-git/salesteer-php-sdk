@@ -24,7 +24,9 @@ abstract class Util
 
     //TODO: Remove in future - this is a workaround for avoid bad SalesteerObject conversion
     public static function convertTo(SalesteerObject $object, string $class){
-        return settype($object, $class);
+        $instance = new $class($object->id, $object->getClient());
+        $instance->fill($object->toArray());
+        return $instance;
     }
 
     /**
