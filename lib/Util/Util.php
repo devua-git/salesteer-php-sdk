@@ -38,8 +38,8 @@ abstract class Util
         $res,
         SalesteerClientInterface $client = null,
         array $headers = null,
-        string $convertToClass = null,
-        )
+        ?string $convertToClass = null,
+    )
     {
         if (self::isList($res)) {
             $mapped = [];
@@ -58,7 +58,13 @@ abstract class Util
                 $class = \Salesteer\SalesteerObject::class;
             }
 
-            return self::convertTo($class::constructFrom($res, $client, $headers), $convertToClass);
+            $obj = $class::constructFrom($res, $client, $headers);
+
+            if($convertToClass){
+                return self::convertTo($obj, $convertToClass);
+            }
+
+            return $obj;
         }
 
         return $res;
