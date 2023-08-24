@@ -7,9 +7,9 @@ use Salesteer\Exception as Exception;
 use Psr\Log\LoggerInterface;
 
 /**
- * @method static Service\CustomerService customers()
- * @method static Service\PlaceService places()
- * @method static Service\OfferService offers()
+ * @method static Service\CustomerService customer()
+ * @method static Service\PlaceService place()
+ * @method static Service\OfferService offer()
  */
 abstract class Salesteer
 {

@@ -8,9 +8,9 @@ use Salesteer\Exception as Exception;
 /**
  * Client used to send requests to Stripe's API.
  *
- * @property Service\CustomerService $customers
- * @property Service\PlaceService $places
- * @property Service\OfferService $offers
+ * @property Service\CustomerService $customer
+ * @property Service\PlaceService $place
+ * @property Service\OfferService $offer
  */
 class SalesteerClient implements SalesteerClientInterface
 {
