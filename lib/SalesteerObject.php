@@ -7,7 +7,6 @@ use Countable;
 use JsonSerializable;
 use Salesteer\Util as Util;
 use Salesteer\Exception as Exception;
-use Salesteer\Util\Util as UtilUtil;
 
 class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
 {
@@ -80,7 +79,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
                 $v,
                 $this->_client,
                 $this->_headers,
-                self::RELATION_TO_CLASS[$k] ?? null
+                static::RELATION_TO_CLASS[$k] ?? null
             );
 
             $this->_values[$k] = $obj;
@@ -156,7 +155,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
             } else {
                 // Removing relationships
                 return null;
-                // return Util\Util::convertToStripeObject($value, $this->_headers)->serializeParameters();
+                // return Util\Util::convertToSalesteerObject($value, $this->_headers)->serializeParameters();
             }
         } elseif ($value instanceof SalesteerObject) {
             // Removing relationships
@@ -213,7 +212,8 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         $this->_values[$k] = Util\Util::convertToSalesteerObject(
             $v,
             $this->_client,
-            $this->_headers
+            $this->_headers,
+            static::RELATION_TO_CLASS[$k] ?? null
         );
     }
 
