@@ -14,8 +14,8 @@ class OfferService extends AbstractService
     public function retrieve(int $id, array $params = null, array $headers = []): Offer
     {
         $url = $this->buildPath('%s', $id, Offer::classUrl());
-        $res = $this->request('get', $url, $params, $headers);
-        return Util::convertTo($res, Offer::class);
+        $res = $this->request('get', $url, $params, $headers, Offer::class);
+        return $res;
     }
 
     /**
@@ -23,15 +23,15 @@ class OfferService extends AbstractService
      */
     public function search(array $params = null, array $headers = []): SalesteerObject
     {
-        $res = $this->request('get', Offer::classUrl(true), $params, $headers);
+        $res = $this->request('get', Offer::classUrl(true), $params, $headers, Offer::class);
 
         return $res;
     }
 
     public function create(array $params = null, array $headers = []): Offer
     {
-        $res = $this->request('post', Offer::classUrl(), $params, $headers);
+        $res = $this->request('post', Offer::classUrl(), $params, $headers, Customer::class);
 
-        return Util::convertTo($res, Offer::class);
+        return $res;
     }
 }
