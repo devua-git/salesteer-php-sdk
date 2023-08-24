@@ -10,6 +10,7 @@ use Salesteer\Exception as Exception;
  *
  * @property Service\CustomerService $customers
  * @property Service\PlaceService $places
+ * @property Service\OfferService $offers
  */
 class SalesteerClient implements SalesteerClientInterface
 {
@@ -19,17 +20,17 @@ class SalesteerClient implements SalesteerClientInterface
 
     public function __construct(string|array $configs = [])
     {
-        if(is_string($configs)){
+        if (is_string($configs)) {
             $configs = ['api_key' => $configs];
         }
         $this->_configs = $configs;
         $this->_configs['api_key'] = $this->_configs['api_key'] ?? Salesteer::getApiKey();
 
-        if(!$this->_configs['api_key']){
+        if (!$this->_configs['api_key']) {
             throw new Exception\InvalidArgumentException('Api key is required.');
         }
 
-        if(!isset($this->_configs['tenant_domain'])){
+        if (!isset($this->_configs['tenant_domain'])) {
             $this->_configs['tenant_domain'] = Salesteer::getTenantDomain();
         }
     }

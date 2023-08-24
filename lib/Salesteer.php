@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
 /**
  * @method static Service\CustomerService customers()
  * @method static Service\PlaceService places()
+ * @method static Service\OfferService offers()
  */
 abstract class Salesteer
 {
@@ -38,15 +39,17 @@ abstract class Salesteer
         self::$_apiKey = $apiKey;
     }
 
-    public static function getApiBase($domain = null){
-        if($domain ?? self::$_tenantDomain){
-            return self::$_apiBase.'/api';
-        }else{
-            return self::$_apiBase.'/central';
+    public static function getApiBase($domain = null)
+    {
+        if ($domain ?? self::$_tenantDomain) {
+            return self::$_apiBase . '/api';
+        } else {
+            return self::$_apiBase . '/central';
         }
     }
 
-    public static function setApiBase(string $apiBase){
+    public static function setApiBase(string $apiBase)
+    {
         self::$_apiBase = $apiBase;
     }
 
@@ -104,7 +107,7 @@ abstract class Salesteer
 
     public static function __callStatic($method, array $args = [])
     {
-        if(count($args) > 0){
+        if (count($args) > 0) {
             self::getLogger()->error(json_encode($args, JSON_PRETTY_PRINT));
             throw new Exception\InvalidArgumentException('You cannot pass arguments to static services.');
         }
