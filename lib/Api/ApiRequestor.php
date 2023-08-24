@@ -70,9 +70,8 @@ class ApiRequestor
             'Authorization' => 'Bearer ' . $apiKey,
         ];
 
-        Salesteer::getLogger()->error($tenantDomain);
         $tenantDomain = $tenantDomain ?? Salesteer::getTenantDomain();
-        Salesteer::getLogger()->error($tenantDomain);
+
         if (null !== $tenantDomain) {
             $headers['X-Tenant'] = $tenantDomain;
         }
@@ -125,7 +124,7 @@ class ApiRequestor
     {
         list($absUrl, $headers, $params) = $this->_prepareRequest($method, $url, $params, $headers);
 
-        Salesteer::getLogger()->error(json_encode(array_merge(
+        Salesteer::getLogger()->debug(json_encode(array_merge(
             $params,
             [
                 'method' => $method,
@@ -145,8 +144,7 @@ class ApiRequestor
 
         Salesteer::getLogger()->error(json_encode([
             $res->getBody(),
-            $res->getStatusCode(),
-            $res->getHeaders()
+            $res->getStatusCode()
         ], JSON_PRETTY_PRINT));
 
         return [
