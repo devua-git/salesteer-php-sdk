@@ -69,6 +69,10 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     public function updateAttributes($values) : void
     {
         foreach ($values as $k => $v) {
+            if (static::getPermanentAttributes()->includes($k)) {
+                continue;
+            }
+
             $this->_values[$k] = Util\Util::convertToSalesteerObject(
                 $v,
                 $this->_client,
