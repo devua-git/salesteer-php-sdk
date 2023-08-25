@@ -9,6 +9,7 @@ class Offer extends ApiResource
     use ApiOperation\Retrieve;
     use ApiOperation\Update;
     use ApiOperation\Drop;
+    use ApiOperation\UpdatesPipeline;
 
     const OBJECT_NAME = 'offer';
 
