@@ -30,7 +30,7 @@ class OfferService extends AbstractService
 
     public function create(array $params = null, array $headers = []): Offer
     {
-        $res = $this->request('post', Offer::classUrl(), $params, $headers, Customer::class);
+        $res = $this->request('post', Offer::classUrl(), $params, $headers, Offer::class);
 
         return $res;
     }
