@@ -20,7 +20,7 @@ class Offer extends ApiResource
     public function saveProducts(array $products = null)
     {
         $url = $this->instanceUrl() . '/products';
-        $res = $this->request('post', $url, $products, null, Offer::class);
+        $res = $this->request('patch', $url, $products, null, Offer::class);
         $this->refreshFrom($res);
     }
 }
