@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
  * @method static Service\PersonService person()
  * @method static Service\PlaceService place()
  * @method static Service\OfferService offer()
+ * @method static Service\PipelineService pipeline()
  */
 abstract class Salesteer
 {
