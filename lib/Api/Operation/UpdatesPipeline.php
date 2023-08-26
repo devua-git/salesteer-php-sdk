@@ -15,7 +15,7 @@ trait UpdatesPipeline
             'entity_id' => $this->id,
             'entity_type' => static::OBJECT_NAME,
             'pipeline_step_id' => $stepId
-        ]);
+        ], []);
 
         return $this;
     }
