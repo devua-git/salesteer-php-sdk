@@ -3,6 +3,7 @@
 namespace Salesteer\Api\Resource;
 
 use Salesteer\Api\Operation as ApiOperation;
+use Salesteer\Api\Contract as ApiContract;
 
 class Offer extends ApiResource
 {
@@ -11,12 +12,13 @@ class Offer extends ApiResource
     use ApiOperation\Drop;
     use ApiOperation\UpdatesPipeline;
 
+    use ApiContract\HasAssignees;
+
     const OBJECT_NAME = 'offer';
 
     const RELATION_TO_CLASS = [
         'products' => OfferProduct::class
     ];
-
 
     public function saveProducts(array $products = null)
     {
