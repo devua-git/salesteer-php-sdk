@@ -142,11 +142,6 @@ class ApiRequestor
             ]
         ));
 
-        Salesteer::getLogger()->error(json_encode([
-            $res->getBody(),
-            $res->getStatusCode()
-        ], JSON_PRETTY_PRINT));
-
         return [
             $res->getBody(),
             $res->getStatusCode(),
@@ -169,7 +164,11 @@ class ApiRequestor
         $resp = json_decode($rbody, true);
         $jsonError = json_last_error();
 
-        if (null === $resp && JSON_ERROR_NONE !== $jsonError) {
+        if (
+            204 !== $rcode
+            && null === $resp
+            && JSON_ERROR_NONE !== $jsonError
+        ) {
             $msg = "Invalid response body from API: {$rbody} "
               . "(HTTP response code was {$rcode}, json_last_error() was {$jsonError})";
 
@@ -180,7 +179,12 @@ class ApiRequestor
             $this->handleErrorResponse($rbody, $rcode, $rheaders, $resp);
         }
 
-        return $resp;
+        Salesteer::getLogger()->error(json_encode([
+            $rcode,
+            $resp ?? [],
+        ],JSON_PRETTY_PRINT));
+
+        return $resp ?? [];
     }
 
     /**
