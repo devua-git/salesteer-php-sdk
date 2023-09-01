@@ -12,26 +12,26 @@ trait HasAssignees
     /**
      * @throws Exception\ApiErrorException
      */
-    public function assignUsers($usersIds = [])
+    public function assignUsers($usersIds = [], $headers = null)
     {
         $entityName = static::OBJECT_NAME;
 
         $url = "assignTo/$entityName/{$this->id}";
         $this->request('post', $url, [
             "users" => $usersIds,
-        ]);
+        ], $headers);
     }
 
     /**
      * @throws Exception\ApiErrorException
      */
-    public function unassignUsers($usersIds = [])
+    public function unassignUsers($usersIds = [], $headers = null)
     {
         $entityName = static::OBJECT_NAME;
 
         $url = "unassignFrom/$entityName/{$this->id}";
         $this->request('post', $url, [
             "users" => $usersIds,
-        ]);
+        ], $headers);
     }
 }
