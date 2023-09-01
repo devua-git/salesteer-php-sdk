@@ -16,7 +16,7 @@ trait HasAssignees
     {
         $entityName = static::OBJECT_NAME;
 
-        $url = "assignTo/$entityName/{$this->id}";
+        $url = "/assignTo/$entityName/{$this->id}";
         $this->request('post', $url, [
             "users" => $usersIds,
         ], $headers);
@@ -29,7 +29,7 @@ trait HasAssignees
     {
         $entityName = static::OBJECT_NAME;
 
-        $url = "unassignFrom/$entityName/{$this->id}";
+        $url = "/unassignFrom/$entityName/{$this->id}";
         $this->request('post', $url, [
             "users" => $usersIds,
         ], $headers);
