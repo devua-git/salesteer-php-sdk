@@ -12,6 +12,19 @@ trait HasAssignees
     /**
      * @throws Exception\ApiErrorException
      */
+    public function syncAssignees($usersIds = [], $headers = null)
+    {
+        $entityName = static::OBJECT_NAME;
+
+        $url = "/syncAssignees/$entityName/{$this->id}";
+        $this->request('post', $url, [
+            "users" => $usersIds,
+        ], $headers);
+    }
+
+    /**
+     * @throws Exception\ApiErrorException
+     */
     public function assignUsers($usersIds = [], $headers = null)
     {
         $entityName = static::OBJECT_NAME;
