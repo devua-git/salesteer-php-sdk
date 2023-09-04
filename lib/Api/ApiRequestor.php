@@ -67,6 +67,7 @@ class ApiRequestor
             'X-Salesteer-Client-User-Agent' => json_encode($ua),
             'User-Agent' => $uaString,
             'Accept' => 'application/json',
+            'Content-Type' => 'application/json',
             'Authorization' => 'Bearer ' . $apiKey,
         ];
 
@@ -96,7 +97,6 @@ class ApiRequestor
             $this->_configs['tenant_domain']
         );
 
-        $defaultHeaders['Content-Type'] = 'application/json';
         $finalHeaders = array_merge($defaultHeaders, $headers);
 
         //TODO: strictly related to Guzzle remove in future

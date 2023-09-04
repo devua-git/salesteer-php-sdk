@@ -8,8 +8,8 @@ class WebhookSignature
 {
     public static function verifyHeader($payload, $secret,  $tolerance = null)
     {
-        $signature = $_SERVER['HTTP_X_SALESTEER_HMAC_SHA256'];
-        $timestamp = $_SERVER['HTTP_X_SALESTEER_TIMESTAMP'];
+        $signature = $_SERVER['HTTP_X_SALESTEER_HMAC_SHA256'] ?? '';
+        $timestamp = $_SERVER['HTTP_X_SALESTEER_TIMESTAMP'] ?? '';
 
         $signedPayload = "{$timestamp}.{$payload}";
 
