@@ -15,6 +15,7 @@ use Salesteer\Exception as Exception;
  * @property Service\CityService $city
  * @property Service\ProvinceService $province
  * @property Service\StateService $state
+ * @property Service\CountryService $country
  */
 class SalesteerClient implements SalesteerClientInterface
 {

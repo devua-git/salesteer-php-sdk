@@ -14,6 +14,7 @@ use Psr\Log\LoggerInterface;
  * @method static Service\CityService city()
  * @method static Service\ProvinceService province()
  * @method static Service\StateService state()
+ * @method static Service\CountryService country()
  */
 abstract class Salesteer
 {
