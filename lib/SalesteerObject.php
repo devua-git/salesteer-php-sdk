@@ -157,15 +157,12 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
                     $update[] = $this->serializeParamsValue($v);
                 }
             } else {
-                // Removing relationships
-                return null;
-                // return Util\Util::convertToSalesteerObject($value, $this->_headers)->serializeParameters();
+                // Relationships
+                return Util\Util::convertToSalesteerObject($value, $this->_headers)->serializeToParameters();
             }
         } elseif ($value instanceof SalesteerObject) {
-            // Removing relationships
-            return null;
-            // $update = $value->serializeToParameters();
-            // return $update;
+            // Relationships
+            return $value->serializeToParameters();
         } else {
             return $value;
         }
