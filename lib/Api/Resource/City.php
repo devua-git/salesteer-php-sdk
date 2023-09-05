@@ -12,4 +12,8 @@ class City extends ApiResource
 
     const OBJECT_NAME = 'city';
     const PLURAL_NAME = 'cities';
+
+    const RELATION_TO_CLASS = [
+        'province' => Province::class,
+    ];
 }

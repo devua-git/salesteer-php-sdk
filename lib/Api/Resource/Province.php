@@ -11,4 +11,8 @@ class Province extends ApiResource
     use ApiOperation\Drop;
 
     const OBJECT_NAME = 'province';
+
+    const RELATION_TO_CLASS = [
+        'state' => State::class,
+    ];
 }
