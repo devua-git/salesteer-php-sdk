@@ -179,11 +179,6 @@ class ApiRequestor
             $this->handleErrorResponse($rbody, $rcode, $rheaders, $resp);
         }
 
-        Salesteer::getLogger()->error(json_encode([
-            $rcode,
-            $resp ?? [],
-        ],JSON_PRETTY_PRINT));
-
         return $resp ?? [];
     }
 
