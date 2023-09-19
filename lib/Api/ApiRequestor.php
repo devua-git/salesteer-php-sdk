@@ -124,15 +124,6 @@ class ApiRequestor
     {
         list($absUrl, $headers, $params) = $this->_prepareRequest($method, $url, $params, $headers);
 
-        Salesteer::getLogger()->debug(json_encode(array_merge(
-            $params,
-            [
-                'method' => $method,
-                'url' => $absUrl,
-                'headers' => $headers,
-            ],
-        ), JSON_PRETTY_PRINT));
-
         // TODO: improve with PSR HTTP, see HttpClient\Http
         $client = new Client();
         $res = $client->request((string) $method, $absUrl, array_merge(
