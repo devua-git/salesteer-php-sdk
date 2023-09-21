@@ -16,9 +16,11 @@ trait HasAssignees
     {
         $entityName = static::OBJECT_NAME;
 
-        $url = "/syncAssignees/$entityName/{$this->id}";
+        $url = "/assignees/sync";
         $this->request('post', $url, [
             "users" => $usersIds,
+            "entity_name" => $entityName,
+            "entity_id" => $this->id,
         ], $headers);
     }
 
