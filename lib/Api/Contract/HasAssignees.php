@@ -18,7 +18,7 @@ trait HasAssignees
 
         $url = "/assignees/sync";
         $this->request('post', $url, [
-            "users" => $usersIds,
+            "user_ids" => $usersIds,
             "entity_name" => $entityName,
             "entity_id" => $this->id,
         ], $headers);
@@ -27,26 +27,30 @@ trait HasAssignees
     /**
      * @throws Exception\ApiErrorException
      */
-    public function assignUsers($usersIds = [], $headers = null)
+    public function attachAssignees($usersIds = [], $headers = null)
     {
         $entityName = static::OBJECT_NAME;
 
-        $url = "/assignTo/$entityName/{$this->id}";
+        $url = "/assignees/attach";
         $this->request('post', $url, [
-            "users" => $usersIds,
+            "user_ids" => $usersIds,
+            "entity_name" => $entityName,
+            "entity_id" => $this->id,
         ], $headers);
     }
 
     /**
      * @throws Exception\ApiErrorException
      */
-    public function unassignUsers($usersIds = [], $headers = null)
+    public function detachAssignees($usersIds = [], $headers = null)
     {
         $entityName = static::OBJECT_NAME;
 
-        $url = "/unassignFrom/$entityName/{$this->id}";
+        $url = "/assignees/detach";
         $this->request('post', $url, [
-            "users" => $usersIds,
+            "user_ids" => $usersIds,
+            "entity_name" => $entityName,
+            "entity_id" => $this->id,
         ], $headers);
     }
 }
