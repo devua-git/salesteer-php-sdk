@@ -16,6 +16,7 @@ class CoreServiceFactory extends AbstractServiceFactory
         'state' => StateService::class,
         'province' => ProvinceService::class,
         'city' => CityService::class,
+        'user' => UserService::class,
     ];
 
     protected function getServiceClass(string $name): string
