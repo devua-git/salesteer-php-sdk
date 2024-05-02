@@ -16,6 +16,7 @@ use Psr\Log\LoggerInterface;
  * @method static Service\StateService state()
  * @method static Service\CountryService country()
  * @method static Service\UserService user()
+ * @method static Service\EventService event()
  */
 abstract class Salesteer
 {
