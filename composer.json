@@ -1,7 +1,6 @@
 {
     "name": "devua/salesteer-php-sdk",
     "description": "Salesteer PHP Library",
-    "version": "1.0.0",
     "keywords": [
         "salesteer",
         "crm",
