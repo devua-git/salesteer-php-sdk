@@ -8,7 +8,7 @@ use Exception;
  * SignatureVerificationException is thrown when the signature verification for
  * a webhook fails.
  */
-class SignatureVerificationException extends \Exception implements ExceptionInterface
+class SignatureVerificationException extends Exception implements ExceptionInterface
 {
     protected $httpBody;
     protected $sigHeader;
@@ -18,7 +18,7 @@ class SignatureVerificationException extends \Exception implements ExceptionInte
      *
      * @param string $message the exception message
      * @param null|string $httpBody the HTTP body as a string
-     * @param null|string $sigHeader the `Stripe-Signature` HTTP header
+     * @param null|string $sigHeader the `Salesteer-Signature` HTTP header
      *
      * @return SignatureVerificationException
      */
@@ -55,7 +55,7 @@ class SignatureVerificationException extends \Exception implements ExceptionInte
     }
 
     /**
-     * Gets the `Stripe-Signature` HTTP header.
+     * Gets the `Salesteer-Signature` HTTP header.
      *
      * @return null|string
      */
@@ -65,7 +65,7 @@ class SignatureVerificationException extends \Exception implements ExceptionInte
     }
 
     /**
-     * Sets the `Stripe-Signature` HTTP header.
+     * Sets the `Salesteer-Signature` HTTP header.
      *
      * @param null|string $sigHeader
      */
