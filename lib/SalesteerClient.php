@@ -6,7 +6,7 @@ use Salesteer\Service as Service;
 use Salesteer\Exception as Exception;
 
 /**
- * Client used to send requests to Stripe's API.
+ * Client used to send requests to Salesteer's API.
  *
  * @property Service\CustomerService $customer
  * @property Service\PersonService $person

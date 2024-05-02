@@ -5,7 +5,7 @@ namespace Salesteer\Exception;
 use Salesteer\ErrorObject;
 
 /**
- * Implements properties and methods common to all (non-SPL) Stripe exceptions.
+ * Implements properties and methods common to all (non-SPL) Salesteer exceptions.
  */
 abstract class ApiErrorException extends \Exception implements ExceptionInterface
 {
@@ -15,7 +15,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     protected $httpStatus;
     protected $jsonBody;
     protected $requestId;
-    protected $stripeCode;
+    protected $salesteerCode;
 
     /**
      * Creates a new API error exception.
@@ -24,8 +24,8 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
      * @param null|int $httpStatus the HTTP status code
      * @param null|string $httpBody the HTTP body as a string
      * @param null|array $jsonBody the JSON deserialized body
-     * @param null|array|\Stripe\Util\CaseInsensitiveArray $httpHeaders the HTTP headers array
-     * @param null|string $stripeCode the Stripe error code
+     * @param null|array|\Salesteer\Util\CaseInsensitiveArray $httpHeaders the HTTP headers array
+     * @param null|string $salesteer the Salesteer error code
      *
      * @return static
      */
@@ -35,14 +35,14 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
         $httpBody = null,
         $jsonBody = null,
         $httpHeaders = null,
-        $stripeCode = null
+        $salesteerCode = null
     ) {
         $instance = new static($message);
         $instance->setHttpStatus($httpStatus);
         $instance->setHttpBody($httpBody);
         $instance->setJsonBody($jsonBody);
         $instance->setHttpHeaders($httpHeaders);
-        $instance->setStripeCode($stripeCode);
+        $instance->setSalesteerCode($salesteerCode);
 
         $instance->setRequestId(null);
         if ($httpHeaders && isset($httpHeaders['Request-Id'])) {
@@ -55,9 +55,9 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     }
 
     /**
-     * Gets the Stripe error object.
+     * Gets the Salesteer error object.
      *
-     * @return null|\Stripe\ErrorObject
+     * @return null|\Salesteer\ErrorObject
      */
     public function getError()
     {
@@ -65,9 +65,9 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     }
 
     /**
-     * Sets the Stripe error object.
+     * Sets the Salesteer error object.
      *
-     * @param null|\Stripe\ErrorObject $error
+     * @param null|\Salesteer\ErrorObject $error
      */
     public function setError($error)
     {
@@ -97,7 +97,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Gets the HTTP headers array.
      *
-     * @return null|array|\Stripe\Util\CaseInsensitiveArray
+     * @return null|array|\Salesteer\Util\CaseInsensitiveArray
      */
     public function getHttpHeaders()
     {
@@ -107,7 +107,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Sets the HTTP headers array.
      *
-     * @param null|array|\Stripe\Util\CaseInsensitiveArray $httpHeaders
+     * @param null|array|\Salesteer\Util\CaseInsensitiveArray $httpHeaders
      */
     public function setHttpHeaders($httpHeaders)
     {
@@ -155,7 +155,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     }
 
     /**
-     * Gets the Stripe request ID.
+     * Gets the Salesteer request ID.
      *
      * @return null|string
      */
@@ -165,7 +165,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     }
 
     /**
-     * Sets the Stripe request ID.
+     * Sets the Salesteer request ID.
      *
      * @param null|string $requestId
      */
@@ -175,26 +175,26 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     }
 
     /**
-     * Gets the Stripe error code.
+     * Gets the Salesteer error code.
      *
-     * Cf. the `CODE_*` constants on {@see \Stripe\ErrorObject} for possible
+     * Cf. the `CODE_*` constants on {@see \Salesteer\ErrorObject} for possible
      * values.
      *
      * @return null|string
      */
-    public function getStripeCode()
+    public function getSalesteerCode()
     {
-        return $this->stripeCode;
+        return $this->salesteerCode;
     }
 
     /**
-     * Sets the Stripe error code.
+     * Sets the Salesteer error code.
      *
-     * @param null|string $stripeCode
+     * @param null|string $salesteerCode
      */
-    public function setStripeCode($stripeCode)
+    public function setSalesteerCode($salesteerCode)
     {
-        $this->stripeCode = $stripeCode;
+        $this->salesteerCode = $salesteerCode;
     }
 
     /**
