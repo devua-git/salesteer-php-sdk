@@ -9,11 +9,7 @@ class WebhookSignature
     public static function verifyHeader($payload, $secret,  $tolerance = null)
     {
         $signature = $_SERVER['HTTP_X_SALESTEER_HMAC_SHA256'] ?? '';
-        $timestamp = $_SERVER['HTTP_X_SALESTEER_TIMESTAMP'] ?? '';
-
-        $signedPayload = "{$timestamp}.{$payload}";
-
-        $expectedSignature = self::computeSignature($signedPayload, $secret);
+        $expectedSignature = self::computeSignature($payload, $secret);
 
         if (!hash_equals($expectedSignature, $signature)) {
             throw Exception\SignatureVerificationException::factory(
@@ -22,11 +18,11 @@ class WebhookSignature
         }
 
         // Check if timestamp is within tolerance
-        if (($tolerance > 0) && (abs(time() - $timestamp) > $tolerance)) {
-            throw Exception\SignatureVerificationException::factory(
-                'Timestamp outside the tolerance zone', $payload, $signature
-            );
-        }
+        // if (($tolerance > 0) && (abs(time() - $timestamp) > $tolerance)) {
+        //     throw Exception\SignatureVerificationException::factory(
+        //         'Timestamp outside the tolerance zone', $payload, $signature
+        //     );
+        // }
 
         return true;
     }
