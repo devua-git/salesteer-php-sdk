@@ -174,7 +174,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         }
     }
 
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
         return $this->toArray();
     }

@@ -15,13 +15,13 @@
         }
     ],
     "require": {
-        "php": "^8.0",
+        "php": "*",
         "ext-curl": "*",
         "ext-json": "*",
         "ext-mbstring": "*",
-        "guzzlehttp/guzzle": "^7.0",
+        "guzzlehttp/guzzle": "^7.9",
         "php-http/discovery": "^1.19",
-        "psr/log": "^1.0|^2.0"
+        "psr/log": "^3.0"
     },
     "autoload": {
         "psr-4": {
