@@ -12,7 +12,8 @@ class User extends ApiResource
 
     public function issueToken()
     {
-        $url = $this->instanceUrl() . '/token';
+        $url = $this->instanceUrl().'/token';
+
         return $this->request('get', $url, [], null, User::class);
     }
 }

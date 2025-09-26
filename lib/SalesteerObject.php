@@ -5,53 +5,53 @@ namespace Salesteer;
 use ArrayAccess;
 use Countable;
 use JsonSerializable;
-use Salesteer\Util as Util;
-use Salesteer\Exception as Exception;
 
 class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
 {
     const OBJECT_NAME = 'object';
+
     const RELATION_TO_CLASS = [];
 
-    private SalesteerClientInterface|null $_client = null;
+    private ?SalesteerClientInterface $_client = null;
 
     private array $_values;
 
-
     public function __construct(
         protected $id = null,
-        SalesteerClientInterface $client = null,
+        ?SalesteerClientInterface $client = null,
         private ?array $_headers = [])
     {
         $this->_client = $client ?? Salesteer::getClient();
 
-        if(null === $this->_client){
+        if ($this->_client === null) {
             throw new Exception\InvalidArgumentException('SalesteerClient cannot be null');
         }
 
         $this->_values = [];
 
-        if (null !== $id) {
+        if ($id !== null) {
             $this->_values['id'] = $id;
         }
     }
 
     public static function constructFrom(
         $values,
-        SalesteerClient $client = null,
+        ?SalesteerClient $client = null,
         ?array $headers = null,
-        )
-    {
+    ) {
         $obj = new static($values['id'] ?? null, $client, $headers);
         $obj->refreshFrom($values);
 
         return $obj;
     }
 
-    public function refreshFrom($values) : void
+    public function refreshFrom($values): void
     {
         if ($values instanceof SalesteerObject) {
             $values = $values->toArray();
+        }
+        if (! is_array($values)) {
+            $values = [];
         }
 
         $removed = new Util\Set(array_diff(array_keys($this->_values), array_keys($values)));
@@ -63,12 +63,12 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         $this->updateAttributes($values);
     }
 
-    public function fill($values) : void
+    public function fill($values): void
     {
         $this->updateAttributes($values);
     }
 
-    public function updateAttributes($values) : void
+    public function updateAttributes($values): void
     {
         foreach ($values as $k => $v) {
             if (static::getPermanentAttributes()->includes($k)) {
@@ -86,24 +86,25 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         }
     }
 
-    public function getRelationClass($key){
+    public function getRelationClass($key)
+    {
         return static::RELATION_TO_CLASS[$key] ?? null;
     }
 
     public static function getPermanentAttributes(): Util\Set
     {
         static $permanentAttributes = null;
-        if (null === $permanentAttributes) {
+        if ($permanentAttributes === null) {
             $permanentAttributes = new Util\Set(['id']);
         }
 
         return $permanentAttributes;
     }
 
-    public function toArray() : array
+    public function toArray(): array
     {
         $maybeToArray = function ($value) {
-            if (null === $value) {
+            if ($value === null) {
                 return null;
             }
 
@@ -111,7 +112,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         };
 
         return array_reduce(array_keys($this->_values), function ($acc, $k) use ($maybeToArray) {
-            if ('_' === substr((string) $k, 0, 1)) {
+            if (substr((string) $k, 0, 1) === '_') {
                 return $acc;
             }
             $v = $this->_values[$k];
@@ -138,14 +139,14 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         return array_filter(
             $updateParams,
             function ($v) {
-                return null !== $v;
+                return $v !== null;
             }
         );
     }
 
     public function serializeParamsValue($value, $key = null)
     {
-        if (null === $value) {
+        if ($value === null) {
             return null;
         }
 
@@ -156,6 +157,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
                 foreach ($value as $v) {
                     $update[] = $this->serializeParamsValue($v);
                 }
+
                 return $update;
             } else {
                 // Relationships
@@ -188,7 +190,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     {
         $class = static::class;
 
-        return $class . ' JSON: ' . $this->toJSON();
+        return $class.' JSON: '.$this->toJSON();
     }
 
     public function isDeleted()
@@ -203,16 +205,16 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     {
         if (static::getPermanentAttributes()->includes($k)) {
             throw new Exception\InvalidArgumentException(
-                "Cannot set {$k} on this object. HINT: you can't set: " .
+                "Cannot set {$k} on this object. HINT: you can't set: ".
                 \implode(', ', static::getPermanentAttributes()->toArray())
             );
         }
 
-        if ('' === $v) {
+        if ($v === '') {
             throw new Exception\InvalidArgumentException(
-                'You cannot set \'' . $k . '\'to an empty string. '
-                . 'We interpret empty strings as NULL in requests. '
-                . 'You may set obj->' . $k . ' = NULL to delete the property'
+                'You cannot set \''.$k.'\'to an empty string. '
+                .'We interpret empty strings as NULL in requests. '
+                .'You may set obj->'.$k.' = NULL to delete the property'
             );
         }
 
@@ -238,7 +240,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     {
         // function should return a reference, using $nullval to return a reference to null
         $nullval = null;
-        if (!empty($this->_values) && array_key_exists($k, $this->_values)) {
+        if (! empty($this->_values) && array_key_exists($k, $this->_values)) {
             return $this->_values[$k];
         }
 
@@ -251,27 +253,27 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     /**
      *  ArrayAccess methods
      */
-    public function offsetSet($k, $v) : void
+    public function offsetSet($k, $v): void
     {
         $this->{$k} = $v;
     }
 
-    public function offsetExists($k) : bool
+    public function offsetExists($k): bool
     {
         return array_key_exists($k, $this->_values);
     }
 
-    public function offsetUnset($k) : void
+    public function offsetUnset($k): void
     {
         unset($this->{$k});
     }
 
-    public function offsetGet($k) : bool
+    public function offsetGet($k): bool
     {
         return array_key_exists($k, $this->_values) ? $this->_values[$k] : null;
     }
 
-    public function count() : int
+    public function count(): int
     {
         return count($this->_values);
     }

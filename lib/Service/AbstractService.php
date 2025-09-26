@@ -2,7 +2,7 @@
 
 namespace Salesteer\Service;
 
-use Salesteer\Exception as Exception;
+use Salesteer\Exception;
 use Salesteer\SalesteerClientInterface;
 
 /**
@@ -15,7 +15,7 @@ abstract class AbstractService
         $this->client = $client;
     }
 
-    public function getClient() : SalesteerClientInterface
+    public function getClient(): SalesteerClientInterface
     {
         return $this->client;
     }
@@ -27,12 +27,12 @@ abstract class AbstractService
 
     protected function buildPath($basePath, $ids, $classPath = '')
     {
-        if(!is_array($ids)){
+        if (! is_array($ids)) {
             $ids = [$ids];
         }
 
         foreach ($ids as $id) {
-            if (null === $id || '' === trim($id)) {
+            if ($id === null || trim($id) === '') {
                 $msg = 'The resource ID cannot be null or whitespace.';
 
                 throw new Exception\InvalidArgumentException($msg);

@@ -2,7 +2,7 @@
 
 namespace Salesteer\Api\Operation;
 
-use Salesteer\Exception as Exception;
+use Salesteer\Exception;
 
 trait Drop
 {

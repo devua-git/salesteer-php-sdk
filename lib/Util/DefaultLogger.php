@@ -4,7 +4,7 @@ namespace Salesteer\Util;
 
 use Exception as GlobalException;
 use Psr\Log\LoggerInterface;
-use Salesteer\Exception as Exception;
+use Salesteer\Exception;
 
 class DefaultLogger implements LoggerInterface
 {
@@ -20,12 +20,13 @@ class DefaultLogger implements LoggerInterface
             throw new Exception\BadMethodCallException('DefaultLogger does not currently implement context. Please implement if you need it.');
         }
 
-        if (null === $this->destination) {
+        if ($this->destination === null) {
             error_log($message, $this->messageType);
         } else {
             error_log($message, $this->messageType, $this->destination);
         }
     }
+
     public function emergency(string|\Stringable $message, array $context = []): void
     {
         throw new GlobalException('Non implemented');

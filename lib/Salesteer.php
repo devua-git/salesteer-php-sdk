@@ -2,8 +2,6 @@
 
 namespace Salesteer;
 
-use Salesteer\Util as Util;
-use Salesteer\Exception as Exception;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -17,6 +15,8 @@ use Psr\Log\LoggerInterface;
  * @method static Service\CountryService country()
  * @method static Service\UserService user()
  * @method static Service\EventService event()
+ * @method static Service\ImportService import()
+ * @method static Service\PaymentDeadlineService paymentDeadline()
  */
 abstract class Salesteer
 {
@@ -24,17 +24,17 @@ abstract class Salesteer
 
     private static string $_apiBase = 'https://api.salesteer.com';
 
-    private static string|null $_apiKey = null;
+    private static ?string $_apiKey = null;
 
-    private static string|null $_tenantDomain = null;
+    private static ?string $_tenantDomain = null;
 
-    private static string|null $_apiVersion = Util\ApiVersion::CURRENT;
+    private static ?string $_apiVersion = Util\ApiVersion::CURRENT;
 
-    private static LoggerInterface|null $_logger = null;
+    private static ?LoggerInterface $_logger = null;
 
     private static bool $_enableTelemetry = true;
 
-    private static SalesteerClient|null $_client = null;
+    private static ?SalesteerClient $_client = null;
 
     public static function getApiKey()
     {
@@ -49,9 +49,9 @@ abstract class Salesteer
     public static function getApiBase($domain = null)
     {
         if ($domain ?? self::$_tenantDomain) {
-            return self::$_apiBase . '/api';
+            return self::$_apiBase.'/api';
         } else {
-            return self::$_apiBase . '/central';
+            return self::$_apiBase.'/central';
         }
     }
 
@@ -82,8 +82,8 @@ abstract class Salesteer
 
     public static function getLogger()
     {
-        if (null === self::$_logger) {
-            return new Util\DefaultLogger();
+        if (self::$_logger === null) {
+            return new Util\DefaultLogger;
         }
 
         return self::$_logger;
@@ -106,9 +106,10 @@ abstract class Salesteer
 
     public static function getClient()
     {
-        if (null === self::$_client) {
-            self::$_client = new SalesteerClient();
+        if (self::$_client === null) {
+            self::$_client = new SalesteerClient;
         }
+
         return self::$_client;
     }
 
@@ -117,6 +118,7 @@ abstract class Salesteer
         if (count($args) > 0) {
             throw new Exception\InvalidArgumentException('You cannot pass arguments to static services.');
         }
+
         return self::getService($method);
     }
 

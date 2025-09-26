@@ -2,9 +2,6 @@
 
 namespace Salesteer;
 
-use Salesteer\Service as Service;
-use Salesteer\Exception as Exception;
-
 /**
  * Client used to send requests to Salesteer's API.
  *
@@ -18,12 +15,14 @@ use Salesteer\Exception as Exception;
  * @property Service\CountryService $country
  * @property Service\UserService $user
  * @property Service\EventService $event
+ * @property Service\ImportService $import
+ * @property Service\PaymentDeadlineService $paymentDeadline
  */
 class SalesteerClient implements SalesteerClientInterface
 {
     private array $_configs = [];
 
-    private Service\CoreServiceFactory|null $_serviceFactory = null;
+    private ?Service\CoreServiceFactory $_serviceFactory = null;
 
     public function __construct(string|array $configs = [])
     {
@@ -33,11 +32,11 @@ class SalesteerClient implements SalesteerClientInterface
         $this->_configs = $configs;
         $this->_configs['api_key'] = $this->_configs['api_key'] ?? Salesteer::getApiKey();
 
-        if (!$this->_configs['api_key']) {
+        if (! $this->_configs['api_key']) {
             throw new Exception\InvalidArgumentException('Api key is required.');
         }
 
-        if (!isset($this->_configs['tenant_domain'])) {
+        if (! isset($this->_configs['tenant_domain'])) {
             $this->_configs['tenant_domain'] = Salesteer::getTenantDomain();
         }
     }
@@ -49,7 +48,7 @@ class SalesteerClient implements SalesteerClientInterface
 
     public function getService(string $name)
     {
-        if (null === $this->_serviceFactory) {
+        if ($this->_serviceFactory === null) {
             $this->_serviceFactory = new Service\CoreServiceFactory($this);
         }
 
@@ -59,11 +58,10 @@ class SalesteerClient implements SalesteerClientInterface
     /**
      * Sends a request to Salesteer's API.
      *
-     * @param 'delete'|'get'|'post'|'patch'|'put' $method the HTTP method
-     * @param string $path the path of the request
-     * @param array $params the parameters of the request
-     * @param array $headers
-     *
+     * @param  'delete'|'get'|'post'|'patch'|'put'  $method  the HTTP method
+     * @param  string  $path  the path of the request
+     * @param  array  $params  the parameters of the request
+     * @param  array  $headers
      * @return SalesteerObject the object returned by Salesteer's API
      */
     public function request($method, $path, $responseClass, $params, $headers)

@@ -2,8 +2,8 @@
 
 namespace Salesteer\Api\Resource;
 
-use Salesteer\SalesteerObject;
 use Salesteer\SalesteerClient;
+use Salesteer\SalesteerObject;
 
 class ApiPaginateResource extends SalesteerObject
 {
@@ -12,10 +12,9 @@ class ApiPaginateResource extends SalesteerObject
     public static function parse(
         $responseClass,
         $values,
-        SalesteerClient $client = null,
+        ?SalesteerClient $client = null,
         ?array $headers = null,
-    )
-    {
+    ) {
         $obj = new static($values['id'] ?? null, $client, $headers);
         $obj->resourceClass = $responseClass;
         $obj->refreshFrom($values);
@@ -23,10 +22,12 @@ class ApiPaginateResource extends SalesteerObject
         return $obj;
     }
 
-    public function getRelationClass($key){
-        if($key === 'data'){
+    public function getRelationClass($key)
+    {
+        if ($key === 'data') {
             return $this->resourceClass;
         }
+
         return null;
     }
 }

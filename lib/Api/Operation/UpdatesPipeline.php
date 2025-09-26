@@ -2,7 +2,7 @@
 
 namespace Salesteer\Api\Operation;
 
-use Salesteer\Exception as Exception;
+use Salesteer\Exception;
 
 trait UpdatesPipeline
 {
@@ -11,10 +11,10 @@ trait UpdatesPipeline
      */
     public function setPipelineStep($stepId)
     {
-        $this->request('patch', "/pipelines/step", [
+        $this->request('patch', '/pipelines/step', [
             'entity_id' => $this->id,
             'entity_type' => static::OBJECT_NAME,
-            'pipeline_step_id' => $stepId
+            'pipeline_step_id' => $stepId,
         ], []);
 
         return $this;

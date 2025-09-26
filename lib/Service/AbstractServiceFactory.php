@@ -2,7 +2,7 @@
 
 namespace Salesteer\Service;
 
-use Salesteer\Exception as Exception;
+use Salesteer\Exception;
 use Salesteer\SalesteerClientInterface;
 
 /**
@@ -28,24 +28,24 @@ abstract class AbstractServiceFactory
         $this->services = [];
     }
 
-    abstract protected function getServiceClass(string $name) : string;
+    abstract protected function getServiceClass(string $name): string;
 
-    public function __get(string $name) : AbstractService|AbstractServiceFactory
+    public function __get(string $name): AbstractService|AbstractServiceFactory
     {
         return $this->getService($name);
     }
 
-    public function getService(string $name) : AbstractService|AbstractServiceFactory
+    public function getService(string $name): AbstractService|AbstractServiceFactory
     {
         $serviceClass = $this->getServiceClass($name);
-        if (null !== $serviceClass) {
-            if (!array_key_exists($name, $this->services)) {
+        if ($serviceClass !== null) {
+            if (! array_key_exists($name, $this->services)) {
                 $this->services[$name] = new $serviceClass($this->client);
             }
 
             return $this->services[$name];
         }
 
-        throw new Exception\UnexpectedValueException('Undefined property: ' . static::class . '::$' . $name);
+        throw new Exception\UnexpectedValueException('Undefined property: '.static::class.'::$'.$name);
     }
 }

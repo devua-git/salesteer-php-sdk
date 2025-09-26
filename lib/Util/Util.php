@@ -10,10 +10,10 @@ abstract class Util
 {
     public static function isList($array)
     {
-        if (!is_array($array)) {
+        if (! is_array($array)) {
             return false;
         }
-        if ([] === $array) {
+        if ($array === []) {
             return true;
         }
         if (array_keys($array) !== range(0, count($array) - 1)) {
@@ -23,10 +23,10 @@ abstract class Util
         return true;
     }
 
-    public static function isPaginateResponse($res){
+    public static function isPaginateResponse($res)
+    {
         return isset($res['data']) && isset($res['current_page']);
     }
-
 
     /**
      * Converts a response from the Salesteer API to the corresponding PHP object.
@@ -35,11 +35,10 @@ abstract class Util
      */
     public static function convertToSalesteerObject(
         $res,
-        SalesteerClientInterface $client = null,
-        array $headers = null,
+        ?SalesteerClientInterface $client = null,
+        ?array $headers = null,
         ?string $convertToClass = null,
-    )
-    {
+    ) {
         if (self::isList($res)) {
             $mapped = [];
             foreach ($res as $i) {
@@ -49,12 +48,13 @@ abstract class Util
             return $mapped;
         }
 
-        if(self::isPaginateResponse($res)){
+        if (self::isPaginateResponse($res)) {
             return ApiPaginateResource::parse($convertToClass, $res, $client, $headers);
         }
 
         if (is_array($res)) {
             $class = $convertToClass ?? SalesteerObject::class;
+
             return $class::constructFrom($res, $client, $headers);
         }
 

@@ -2,16 +2,14 @@
 
 namespace Salesteer;
 
-use Salesteer\Exception as Exception;
-
 class WebhookSignature
 {
-    public static function verifyHeader($payload, $secret,  $tolerance = null)
+    public static function verifyHeader($payload, $secret, $tolerance = null)
     {
         $signature = $_SERVER['HTTP_X_SALESTEER_HMAC_SHA256'] ?? '';
         $expectedSignature = self::computeSignature($payload, $secret);
 
-        if (!hash_equals($expectedSignature, $signature)) {
+        if (! hash_equals($expectedSignature, $signature)) {
             throw Exception\SignatureVerificationException::factory(
                 'No signatures found matching the expected signature for payload', $payload, $signature
             );

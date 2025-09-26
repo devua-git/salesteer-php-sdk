@@ -2,7 +2,7 @@
 
 namespace Salesteer\Util;
 
-use Salesteer\Api\Resource as Resource;
+use Salesteer\Api\Resource;
 
 class ObjectTypes
 {

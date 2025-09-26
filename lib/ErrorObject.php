@@ -2,6 +2,4 @@
 
 namespace Salesteer;
 
-class ErrorObject extends SalesteerObject
-{
-}
+class ErrorObject extends SalesteerObject {}

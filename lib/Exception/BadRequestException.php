@@ -2,6 +2,4 @@
 
 namespace Salesteer\Exception;
 
-class BadRequestException extends ApiErrorException
-{
-}
+class BadRequestException extends ApiErrorException {}

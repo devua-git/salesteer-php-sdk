@@ -16,11 +16,11 @@ trait HasAssignees
     {
         $entityName = static::OBJECT_NAME;
 
-        $url = "/assignees/sync";
+        $url = '/assignees/sync';
         $this->request('post', $url, [
-            "user_ids" => $usersIds,
-            "entity_name" => $entityName,
-            "entity_id" => $this->id,
+            'user_ids' => $usersIds,
+            'entity_name' => $entityName,
+            'entity_id' => $this->id,
         ], $headers);
     }
 
@@ -31,11 +31,11 @@ trait HasAssignees
     {
         $entityName = static::OBJECT_NAME;
 
-        $url = "/assignees/attach";
+        $url = '/assignees/attach';
         $this->request('post', $url, [
-            "user_ids" => $usersIds,
-            "entity_name" => $entityName,
-            "entity_id" => $this->id,
+            'user_ids' => $usersIds,
+            'entity_name' => $entityName,
+            'entity_id' => $this->id,
         ], $headers);
     }
 
@@ -46,11 +46,11 @@ trait HasAssignees
     {
         $entityName = static::OBJECT_NAME;
 
-        $url = "/assignees/detach";
+        $url = '/assignees/detach';
         $this->request('post', $url, [
-            "user_ids" => $usersIds,
-            "entity_name" => $entityName,
-            "entity_id" => $this->id,
+            'user_ids' => $usersIds,
+            'entity_name' => $entityName,
+            'entity_id' => $this->id,
         ], $headers);
     }
 }

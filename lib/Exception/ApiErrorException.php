@@ -10,23 +10,28 @@ use Salesteer\ErrorObject;
 abstract class ApiErrorException extends \Exception implements ExceptionInterface
 {
     protected $error;
+
     protected $httpBody;
+
     protected $httpHeaders;
+
     protected $httpStatus;
+
     protected $jsonBody;
+
     protected $requestId;
+
     protected $salesteerCode;
 
     /**
      * Creates a new API error exception.
      *
-     * @param string $message the exception message
-     * @param null|int $httpStatus the HTTP status code
-     * @param null|string $httpBody the HTTP body as a string
-     * @param null|array $jsonBody the JSON deserialized body
-     * @param null|array|\Salesteer\Util\CaseInsensitiveArray $httpHeaders the HTTP headers array
-     * @param null|string $salesteer the Salesteer error code
-     *
+     * @param  string  $message  the exception message
+     * @param  null|int  $httpStatus  the HTTP status code
+     * @param  null|string  $httpBody  the HTTP body as a string
+     * @param  null|array  $jsonBody  the JSON deserialized body
+     * @param  null|array|\Salesteer\Util\CaseInsensitiveArray  $httpHeaders  the HTTP headers array
+     * @param  null|string  $salesteer  the Salesteer error code
      * @return static
      */
     public static function factory(
@@ -67,7 +72,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Sets the Salesteer error object.
      *
-     * @param null|\Salesteer\ErrorObject $error
+     * @param  null|\Salesteer\ErrorObject  $error
      */
     public function setError($error)
     {
@@ -87,7 +92,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Sets the HTTP body as a string.
      *
-     * @param null|string $httpBody
+     * @param  null|string  $httpBody
      */
     public function setHttpBody($httpBody)
     {
@@ -107,7 +112,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Sets the HTTP headers array.
      *
-     * @param null|array|\Salesteer\Util\CaseInsensitiveArray $httpHeaders
+     * @param  null|array|\Salesteer\Util\CaseInsensitiveArray  $httpHeaders
      */
     public function setHttpHeaders($httpHeaders)
     {
@@ -127,7 +132,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Sets the HTTP status code.
      *
-     * @param null|int $httpStatus
+     * @param  null|int  $httpStatus
      */
     public function setHttpStatus($httpStatus)
     {
@@ -147,7 +152,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Sets the JSON deserialized body.
      *
-     * @param null|array<string, mixed> $jsonBody
+     * @param  null|array<string, mixed>  $jsonBody
      */
     public function setJsonBody($jsonBody)
     {
@@ -167,7 +172,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Sets the Salesteer request ID.
      *
-     * @param null|string $requestId
+     * @param  null|string  $requestId
      */
     public function setRequestId($requestId)
     {
@@ -190,7 +195,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Sets the Salesteer error code.
      *
-     * @param null|string $salesteerCode
+     * @param  null|string  $salesteerCode
      */
     public function setSalesteerCode($salesteerCode)
     {
@@ -204,15 +209,15 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
      */
     public function __toString()
     {
-        $statusStr = (null === $this->getHttpStatus()) ? '' : "(Status {$this->getHttpStatus()}) ";
-        $idStr = (null === $this->getRequestId()) ? '' : "(Request {$this->getRequestId()}) ";
+        $statusStr = ($this->getHttpStatus() === null) ? '' : "(Status {$this->getHttpStatus()}) ";
+        $idStr = ($this->getRequestId() === null) ? '' : "(Request {$this->getRequestId()}) ";
 
         return "{$statusStr}{$idStr}{$this->getMessage()}";
     }
 
     protected function constructErrorObject()
     {
-        if (null === $this->jsonBody || !\array_key_exists('error', $this->jsonBody)) {
+        if ($this->jsonBody === null || ! \array_key_exists('error', $this->jsonBody)) {
             return null;
         }
 

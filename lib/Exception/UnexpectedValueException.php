@@ -2,6 +2,4 @@
 
 namespace Salesteer\Exception;
 
-class UnexpectedValueException extends \UnexpectedValueException implements ExceptionInterface
-{
-}
+class UnexpectedValueException extends \UnexpectedValueException implements ExceptionInterface {}

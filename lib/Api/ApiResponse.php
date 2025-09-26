@@ -2,7 +2,7 @@
 
 namespace Salesteer\Api;
 
-use Salesteer\Util as Util;
+use Salesteer\Util;
 
 /**
  * Class ApiResponse.
@@ -30,10 +30,10 @@ class ApiResponse
     public $code;
 
     /**
-     * @param string $body
-     * @param int $code
-     * @param null|array|Util\CaseInsensitiveArray $headers
-     * @param null|array $json
+     * @param  string  $body
+     * @param  int  $code
+     * @param  null|array|Util\CaseInsensitiveArray  $headers
+     * @param  null|array  $json
      */
     public function __construct($body, $code, $headers, $json)
     {

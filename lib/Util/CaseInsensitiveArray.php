@@ -23,34 +23,34 @@ class CaseInsensitiveArray implements \ArrayAccess, \Countable, \IteratorAggrega
         $this->container = array_change_key_case($initial_array, \CASE_LOWER);
     }
 
-    public function count() : int
+    public function count(): int
     {
         return count($this->container);
     }
 
-    public function getIterator() : ArrayIterator
+    public function getIterator(): ArrayIterator
     {
         return new ArrayIterator($this->container);
     }
 
-    public function offsetSet($offset, $value) : void
+    public function offsetSet($offset, $value): void
     {
         $offset = self::maybeLowercase($offset);
-        if (null === $offset) {
+        if ($offset === null) {
             $this->container[] = $value;
         } else {
             $this->container[$offset] = $value;
         }
     }
 
-    public function offsetExists($offset) : bool
+    public function offsetExists($offset): bool
     {
         $offset = self::maybeLowercase($offset);
 
         return isset($this->container[$offset]);
     }
 
-    public function offsetUnset($offset) : void
+    public function offsetUnset($offset): void
     {
         $offset = self::maybeLowercase($offset);
         unset($this->container[$offset]);

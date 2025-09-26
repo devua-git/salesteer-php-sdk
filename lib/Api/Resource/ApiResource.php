@@ -2,13 +2,14 @@
 
 namespace Salesteer\Api\Resource;
 
+use Salesteer\Exception;
 use Salesteer\Salesteer;
 use Salesteer\SalesteerObject;
-use Salesteer\Exception as Exception;
 
 abstract class ApiResource extends SalesteerObject
 {
     const PLURAL_NAME = null;
+
     const IS_API_PLURAL = false;
 
     /**
@@ -24,12 +25,12 @@ abstract class ApiResource extends SalesteerObject
             null,
             $this->_headers
         );
-        $this->refreshFrom($response->json, $this->_headers);
+        $this->refreshFrom($response, $this->_headers);
 
         return $this;
     }
 
-    public static function classUrl(?bool $isApiPlural = null) : string
+    public static function classUrl(?bool $isApiPlural = null): string
     {
         $isApiPlural = $isApiPlural ?? static::IS_API_PLURAL;
         $objectName = static::OBJECT_NAME;
@@ -40,7 +41,7 @@ abstract class ApiResource extends SalesteerObject
 
         $version = Salesteer::getApiVersion();
 
-        if($version){
+        if ($version) {
             return "/$version/{$resourceName}";
         }
 

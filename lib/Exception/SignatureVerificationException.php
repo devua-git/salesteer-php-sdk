@@ -11,15 +11,15 @@ use Exception;
 class SignatureVerificationException extends Exception implements ExceptionInterface
 {
     protected $httpBody;
+
     protected $sigHeader;
 
     /**
      * Creates a new SignatureVerificationException exception.
      *
-     * @param string $message the exception message
-     * @param null|string $httpBody the HTTP body as a string
-     * @param null|string $sigHeader the `Salesteer-Signature` HTTP header
-     *
+     * @param  string  $message  the exception message
+     * @param  null|string  $httpBody  the HTTP body as a string
+     * @param  null|string  $sigHeader  the `Salesteer-Signature` HTTP header
      * @return SignatureVerificationException
      */
     public static function factory(
@@ -47,7 +47,7 @@ class SignatureVerificationException extends Exception implements ExceptionInter
     /**
      * Sets the HTTP body as a string.
      *
-     * @param null|string $httpBody
+     * @param  null|string  $httpBody
      */
     public function setHttpBody($httpBody)
     {
@@ -67,7 +67,7 @@ class SignatureVerificationException extends Exception implements ExceptionInter
     /**
      * Sets the `Salesteer-Signature` HTTP header.
      *
-     * @param null|string $sigHeader
+     * @param  null|string  $sigHeader
      */
     public function setSigHeader($sigHeader)
     {
