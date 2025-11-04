@@ -19,7 +19,7 @@ class CoreServiceFactory extends AbstractServiceFactory
         'user' => UserService::class,
         'event' => EventService::class,
         'import' => ImportService::class,
-        'payment-deadline' => PaymentDeadlineService::class,
+        'paymentDeadline' => PaymentDeadlineService::class,
     ];
 
     protected function getServiceClass(string $name): string
