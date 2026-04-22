@@ -2,6 +2,8 @@
 
 namespace Salesteer\Exception;
 
+use Salesteer\Util\CaseInsensitiveArray;
+
 /**
  * InvalidRequestException is thrown when a request is initiated with invalid
  * parameters.
@@ -17,7 +19,7 @@ class InvalidRequestException extends ApiErrorException
      * @param  null|int  $httpStatus  the HTTP status code
      * @param  null|string  $httpBody  the HTTP body as a string
      * @param  null|array  $jsonBody  the JSON deserialized body
-     * @param  null|array|\Salesteer\Util\CaseInsensitiveArray  $httpHeaders  the HTTP headers array
+     * @param  null|array|CaseInsensitiveArray  $httpHeaders  the HTTP headers array
      * @param  null|string  $salesteerCode  the Salesteer error code
      * @param  null|string  $salesteerParam  the parameter related to the error
      * @return InvalidRequestException

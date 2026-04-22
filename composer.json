@@ -36,5 +36,8 @@
         "allow-plugins": {
             "php-http/discovery": true
         }
+    },
+    "require-dev": {
+        "laravel/pint": "^1.29"
     }
 }

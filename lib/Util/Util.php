@@ -25,7 +25,24 @@ abstract class Util
 
     public static function isPaginateResponse($res)
     {
+        return self::isLengthAwarePaginateResponse($res) || self::isCursorPaginateResponse($res);
+    }
+
+    public static function isLengthAwarePaginateResponse($res)
+    {
         return isset($res['data']) && isset($res['current_page']);
+    }
+
+    public static function isCursorPaginateResponse($res)
+    {
+        if (! isset($res['data']) || ! is_array($res['data'])) {
+            return false;
+        }
+
+        return array_key_exists('next_cursor', $res)
+            || array_key_exists('prev_cursor', $res)
+            || array_key_exists('next_page_url', $res)
+            || array_key_exists('prev_page_url', $res);
     }
 
     /**

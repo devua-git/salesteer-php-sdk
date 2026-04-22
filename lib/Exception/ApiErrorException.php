@@ -3,6 +3,7 @@
 namespace Salesteer\Exception;
 
 use Salesteer\ErrorObject;
+use Salesteer\Util\CaseInsensitiveArray;
 
 /**
  * Implements properties and methods common to all (non-SPL) Salesteer exceptions.
@@ -30,7 +31,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
      * @param  null|int  $httpStatus  the HTTP status code
      * @param  null|string  $httpBody  the HTTP body as a string
      * @param  null|array  $jsonBody  the JSON deserialized body
-     * @param  null|array|\Salesteer\Util\CaseInsensitiveArray  $httpHeaders  the HTTP headers array
+     * @param  null|array|CaseInsensitiveArray  $httpHeaders  the HTTP headers array
      * @param  null|string  $salesteer  the Salesteer error code
      * @return static
      */
@@ -62,7 +63,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Gets the Salesteer error object.
      *
-     * @return null|\Salesteer\ErrorObject
+     * @return null|ErrorObject
      */
     public function getError()
     {
@@ -72,7 +73,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Sets the Salesteer error object.
      *
-     * @param  null|\Salesteer\ErrorObject  $error
+     * @param  null|ErrorObject  $error
      */
     public function setError($error)
     {
@@ -102,7 +103,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Gets the HTTP headers array.
      *
-     * @return null|array|\Salesteer\Util\CaseInsensitiveArray
+     * @return null|array|CaseInsensitiveArray
      */
     public function getHttpHeaders()
     {
@@ -112,7 +113,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Sets the HTTP headers array.
      *
-     * @param  null|array|\Salesteer\Util\CaseInsensitiveArray  $httpHeaders
+     * @param  null|array|CaseInsensitiveArray  $httpHeaders
      */
     public function setHttpHeaders($httpHeaders)
     {
@@ -182,7 +183,7 @@ abstract class ApiErrorException extends \Exception implements ExceptionInterfac
     /**
      * Gets the Salesteer error code.
      *
-     * Cf. the `CODE_*` constants on {@see \Salesteer\ErrorObject} for possible
+     * Cf. the `CODE_*` constants on {@see ErrorObject} for possible
      * values.
      *
      * @return null|string

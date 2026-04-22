@@ -9,6 +9,7 @@ use Psr\Log\LoggerInterface;
  * @method static Service\PersonService person()
  * @method static Service\PlaceService place()
  * @method static Service\OfferService offer()
+ * @method static Service\CommentService comment()
  * @method static Service\CityService city()
  * @method static Service\ProvinceService province()
  * @method static Service\StateService state()
@@ -48,10 +49,12 @@ abstract class Salesteer
 
     public static function getApiBase($domain = null)
     {
+        $base = rtrim(self::$_apiBase, '/');
+
         if ($domain ?? self::$_tenantDomain) {
-            return self::$_apiBase.'/api';
+            return $base.'/api';
         } else {
-            return self::$_apiBase.'/central';
+            return $base.'/central';
         }
     }
 

@@ -3,6 +3,7 @@
 namespace Salesteer\Api;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Salesteer\Exception;
 use Salesteer\Salesteer;
 
@@ -123,12 +124,17 @@ class ApiRequestor
 
         // TODO: improve with PSR HTTP, see HttpClient\Http
         $client = new Client;
-        $res = $client->request((string) $method, $absUrl, array_merge(
-            $params,
-            [
-                'headers' => $headers,
-            ]
-        ));
+
+        try {
+            $res = $client->request((string) $method, $absUrl, array_merge(
+                $params,
+                [
+                    'headers' => $headers,
+                ]
+            ));
+        } catch (GuzzleException $e) {
+            throw Exception\ApiConnectionException::factory($e->getMessage());
+        }
 
         return [
             $res->getBody(),

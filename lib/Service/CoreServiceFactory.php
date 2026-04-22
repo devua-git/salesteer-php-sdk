@@ -12,6 +12,7 @@ class CoreServiceFactory extends AbstractServiceFactory
         'person' => PersonService::class,
         'place' => PlaceService::class,
         'offer' => OfferService::class,
+        'comment' => CommentService::class,
         'country' => CountryService::class,
         'state' => StateService::class,
         'province' => ProvinceService::class,
