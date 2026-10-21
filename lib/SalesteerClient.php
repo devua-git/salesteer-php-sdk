@@ -30,6 +30,11 @@ class SalesteerClient implements SalesteerClientInterface
         if (is_string($configs)) {
             $configs = ['api_key' => $configs];
         }
+
+        if (array_key_exists('silent', $configs) && ! is_bool($configs['silent'])) {
+            throw new Exception\InvalidArgumentException('The silent configuration must be a boolean.');
+        }
+
         $this->_configs = $configs;
         $this->_configs['api_key'] = $this->_configs['api_key'] ?? Salesteer::getApiKey();
 

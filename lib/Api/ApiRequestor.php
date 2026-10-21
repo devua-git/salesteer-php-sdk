@@ -4,6 +4,7 @@ namespace Salesteer\Api;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\Uri;
 use Salesteer\Exception;
 use Salesteer\Salesteer;
 
@@ -95,6 +96,17 @@ class ApiRequestor
 
         $finalHeaders = array_merge($defaultHeaders, $headers);
 
+        $method = strtolower((string) $method);
+        $silent = null;
+
+        if (in_array($method, ['post', 'put', 'patch', 'delete'], true)) {
+            $silent = $this->_configs['silent'] ?? null;
+
+            if ($silent !== null && ! is_bool($silent)) {
+                throw new Exception\InvalidArgumentException('The silent configuration must be a boolean.');
+            }
+        }
+
         // TODO: strictly related to Guzzle remove in future
         if (isset($params['multipart'])) {
         } elseif ($method === 'get') {
@@ -103,6 +115,20 @@ class ApiRequestor
         } else {
             $finalHeaders['Content-Type'] = 'application/json';
             $params = ['json' => $params];
+        }
+
+        if ($silent !== null) {
+            $uri = new Uri($absUrl);
+
+            if (isset($params['query'])) {
+                $query = is_array($params['query'])
+                    ? http_build_query($params['query'], '', '&', PHP_QUERY_RFC3986)
+                    : $params['query'];
+                $uri = $uri->withQuery($query);
+                unset($params['query']);
+            }
+
+            $absUrl = (string) Uri::withQueryValue($uri, 'silent', $silent ? 'true' : 'false');
         }
 
         return [$absUrl, $finalHeaders, $params];
