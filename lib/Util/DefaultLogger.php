@@ -2,11 +2,11 @@
 
 namespace Salesteer\Util;
 
-use Exception as GlobalException;
-use Psr\Log\LoggerInterface;
-use Salesteer\Exception;
+use Psr\Log\AbstractLogger;
+use Psr\Log\InvalidArgumentException;
+use Psr\Log\LogLevel;
 
-class DefaultLogger implements LoggerInterface
+class DefaultLogger extends AbstractLogger
 {
     /** @var int */
     public $messageType = 0;
@@ -14,56 +14,25 @@ class DefaultLogger implements LoggerInterface
     /** @var null|string */
     public $destination;
 
-    public function error(string|\Stringable $message, array $context = []): void
+    public function log($level, string|\Stringable $message, array $context = []): void
     {
-        if (count($context) > 0) {
-            throw new Exception\BadMethodCallException('DefaultLogger does not currently implement context. Please implement if you need it.');
+        if (! in_array($level, [
+            LogLevel::EMERGENCY,
+            LogLevel::ALERT,
+            LogLevel::CRITICAL,
+            LogLevel::ERROR,
+            LogLevel::WARNING,
+            LogLevel::NOTICE,
+            LogLevel::INFO,
+            LogLevel::DEBUG,
+        ], true)) {
+            throw new InvalidArgumentException('Invalid log level.');
         }
 
         if ($this->destination === null) {
-            error_log($message, $this->messageType);
+            error_log((string) $message, $this->messageType);
         } else {
-            error_log($message, $this->messageType, $this->destination);
+            error_log((string) $message, $this->messageType, $this->destination);
         }
-    }
-
-    public function emergency(string|\Stringable $message, array $context = []): void
-    {
-        throw new GlobalException('Non implemented');
-    }
-
-    public function alert(string|\Stringable $message, array $context = []): void
-    {
-        throw new GlobalException('Non implemented');
-    }
-
-    public function critical(string|\Stringable $message, array $context = []): void
-    {
-        throw new GlobalException('Non implemented');
-    }
-
-    public function warning(string|\Stringable $message, array $context = []): void
-    {
-        throw new GlobalException('Non implemented');
-    }
-
-    public function notice(string|\Stringable $message, array $context = []): void
-    {
-        throw new GlobalException('Non implemented');
-    }
-
-    public function info(string|\Stringable $message, array $context = []): void
-    {
-        throw new GlobalException('Non implemented');
-    }
-
-    public function debug(string|\Stringable $message, array $context = []): void
-    {
-        throw new GlobalException('Non implemented');
-    }
-
-    public function log($level, string|\Stringable $message, array $context = []): void
-    {
-        throw new GlobalException('Non implemented');
     }
 }

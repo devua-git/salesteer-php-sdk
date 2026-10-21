@@ -13,7 +13,12 @@ class ApiRequestor
     public function __construct(
         private string $_apiKey,
         private string $_apiBase,
-        private array $_configs = []) {}
+        private array $_configs = [])
+    {
+        if (! array_key_exists('tenant_domain', $this->_configs)) {
+            $this->_configs['tenant_domain'] = Salesteer::getTenantDomain();
+        }
+    }
 
     /**
      * @param  'delete'|'get'|'post'  $method
@@ -67,8 +72,6 @@ class ApiRequestor
             'Accept' => 'application/json',
             'Authorization' => 'Bearer '.$apiKey,
         ];
-
-        $tenantDomain = $tenantDomain ?? Salesteer::getTenantDomain();
 
         if ($tenantDomain !== null) {
             $headers['X-Tenant'] = $tenantDomain;
@@ -156,14 +159,15 @@ class ApiRequestor
                 $params,
                 [
                     'headers' => $headers,
+                    'http_errors' => false,
                 ]
             ));
         } catch (GuzzleException $e) {
-            throw Exception\ApiConnectionException::factory($e->getMessage());
+            throw new Exception\ApiConnectionException($e->getMessage(), 0, $e);
         }
 
         return [
-            $res->getBody(),
+            (string) $res->getBody(),
             $res->getStatusCode(),
             $res->getHeaders(),
         ];
@@ -183,6 +187,10 @@ class ApiRequestor
         $resp = json_decode($rbody, true);
         $jsonError = json_last_error();
 
+        if ($rcode < 200 || $rcode >= 300) {
+            $this->handleErrorResponse($rbody, $rcode, $rheaders, $resp);
+        }
+
         if (
             $rcode !== 204
             && $resp === null
@@ -194,10 +202,6 @@ class ApiRequestor
             throw new Exception\UnexpectedValueException($msg, $rcode);
         }
 
-        if ($rcode < 200 || $rcode >= 300) {
-            $this->handleErrorResponse($rbody, $rcode, $rheaders, $resp);
-        }
-
         return $resp ?? [];
     }
 
@@ -205,21 +209,15 @@ class ApiRequestor
      * @param  string  $rbody  a JSON string
      * @param  int  $rcode
      * @param  array  $rheaders
-     * @param  array  $resp
+     * @param  mixed  $resp
      *
      * @throws Exception\UnexpectedValueException
      * @throws Exception\ApiErrorException
      */
     public function handleErrorResponse($rbody, $rcode, $rheaders, $resp)
     {
-        if (! is_array($resp) || ! isset($resp['error'])) {
-            $msg = "Invalid response object from API: {$rbody} "
-              ."(HTTP response code was {$rcode})";
-
-            throw new Exception\UnexpectedValueException($msg);
-        }
-
-        $errorData = $resp['error'];
+        $resp = is_array($resp) ? $resp : null;
+        $errorData = is_array($resp['error'] ?? null) ? $resp['error'] : ($resp ?? []);
 
         $error = self::_specificAPIError($rbody, $rcode, $rheaders, $resp, $errorData);
 
@@ -232,22 +230,27 @@ class ApiRequestor
      * @param  string  $rbody
      * @param  int  $rcode
      * @param  array  $rheaders
-     * @param  array  $resp
+     * @param  null|array  $resp
      * @param  array  $errorData
      * @return Exception\ApiErrorException
      */
     private static function _specificAPIError($rbody, $rcode, $rheaders, $resp, $errorData)
     {
-        $msg = isset($errorData['message']) ? $errorData['message'] : null;
+        $msg = $errorData['message'] ?? $resp['message'] ?? null;
+
+        if (! is_string($msg) || $msg === '') {
+            $msg = "Request to Salesteer API failed (HTTP {$rcode}).";
+        }
+
         $param = isset($errorData['param']) ? $errorData['param'] : null;
         $code = isset($errorData['code']) ? $errorData['code'] : null;
-        $type = isset($errorData['type']) ? $errorData['type'] : null;
 
         switch ($rcode) {
             case 400:
                 return Exception\BadRequestException::factory($msg, $rcode, $rbody, $resp, $rheaders, $code);
 
             case 404:
+            case 422:
                 return Exception\InvalidRequestException::factory($msg, $rcode, $rbody, $resp, $rheaders, $code, $param);
 
             case 401:

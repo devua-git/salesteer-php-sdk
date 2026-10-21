@@ -15,7 +15,7 @@ trait Update
 
         $url = $this->instanceUrl();
         $res = $this->request('patch', $url, $params, $headers);
-        $this->refreshFrom($res, $headers);
+        $this->refreshFrom($res);
 
         return $this;
     }

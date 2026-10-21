@@ -25,7 +25,7 @@ abstract class ApiResource extends SalesteerObject
             null,
             $this->_headers
         );
-        $this->refreshFrom($response, $this->_headers);
+        $this->refreshFrom($response);
 
         return $this;
     }

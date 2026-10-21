@@ -42,7 +42,7 @@ class SalesteerClient implements SalesteerClientInterface
             throw new Exception\InvalidArgumentException('Api key is required.');
         }
 
-        if (! isset($this->_configs['tenant_domain'])) {
+        if (! array_key_exists('tenant_domain', $this->_configs)) {
             $this->_configs['tenant_domain'] = Salesteer::getTenantDomain();
         }
     }
@@ -74,7 +74,7 @@ class SalesteerClient implements SalesteerClientInterface
     {
         $requestor = new Api\ApiRequestor(
             $this->_configs['api_key'],
-            Salesteer::getApiBase($this->_configs['tenant_domain']),
+            Salesteer::getApiBase($this->_configs['tenant_domain'] ?? ''),
             $this->_configs,
         );
 

@@ -11,7 +11,7 @@ trait Retrieve
      */
     public static function retrieve(string|int $id, $headers = null)
     {
-        $instance = new static($id, $headers);
+        $instance = new static($id, null, $headers);
         $instance->refresh();
 
         return $instance;

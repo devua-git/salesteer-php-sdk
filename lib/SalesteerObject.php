@@ -19,7 +19,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
     public function __construct(
         protected $id = null,
         ?SalesteerClientInterface $client = null,
-        private ?array $_headers = [])
+        protected ?array $_headers = [])
     {
         $this->_client = $client ?? Salesteer::getClient();
 
@@ -136,12 +136,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
             );
         }
 
-        return array_filter(
-            $updateParams,
-            function ($v) {
-                return $v !== null;
-            }
-        );
+        return $updateParams;
     }
 
     public function serializeParamsValue($value, $key = null)
@@ -268,7 +263,7 @@ class SalesteerObject implements ArrayAccess, Countable, JsonSerializable
         unset($this->{$k});
     }
 
-    public function offsetGet($k): bool
+    public function offsetGet($k): mixed
     {
         return array_key_exists($k, $this->_values) ? $this->_values[$k] : null;
     }

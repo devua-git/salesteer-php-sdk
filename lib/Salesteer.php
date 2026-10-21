@@ -45,6 +45,7 @@ abstract class Salesteer
     public static function setApiKey($apiKey)
     {
         self::$_apiKey = $apiKey;
+        self::$_client = null;
     }
 
     public static function getApiBase($domain = null)
@@ -71,6 +72,7 @@ abstract class Salesteer
     public static function setTenantDomain($tenantDomain)
     {
         self::$_tenantDomain = $tenantDomain;
+        self::$_client = null;
     }
 
     public static function getApiVersion()
